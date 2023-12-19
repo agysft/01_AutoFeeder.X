@@ -8,7 +8,7 @@ This is a test project for an auto-feeder for CompactPnP. When the switch is pre
 
 ---
 ＜image＞  
-[movie](image/20231216.mp4)
+[movie](image/ezgif.com-video-to-gif-converted.gif)
 
 ＜回路図＞  
 [REV.01](schematics/AutoFeeder_Drum-type.pdf) 
