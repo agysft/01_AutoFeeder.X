@@ -8,9 +8,25 @@ This is a test project for an auto-feeder for CompactPnP. When the switch is pre
 
 ---
 ＜image＞  
-[movie](image/ezgif.com-video-to-gif-converted.gif)
+[demo](image/ezgif.com-video-to-gif-converted.gif)
 
 ＜回路図＞  
 [REV.01](schematics/AutoFeeder_Drum-type.pdf) 
+
+＜PIC内ブロック図＞
+
+```mermaid
+graph LR
+  A[Timer2]-->B[PWM3]-->C
+  subgraph BA6211
+  C[FWD]
+  E[REV]
+  end
+  A-->D[PWM4]-->E
+  F[Sensor0]-->|-|M[CMP2]-->N[LED Green]
+    L[FVR 1.024V]-->|+|M
+    L-->|+|Q
+  I[Sensor1]-->|-|Q[CMP1]-->K[LED Red]
+```
 
 ---
