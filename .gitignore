@@ -17,3 +17,7 @@ nbproject/*
 # etc.
 *.zip
 *.bak
+
+#KiCAD
+fp-info-cache
+*-backups

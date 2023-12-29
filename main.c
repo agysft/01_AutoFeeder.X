@@ -46,24 +46,110 @@
 #define FWD 1
 #define REV 0
 
+#include <stdio.h>
+#include <string.h>
+#include "mcc_generated_files/examples/i2c_master_example.h"
 
-void motor_on(unsigned int Direction, int PWM){
+char DisplayData[8]="12345678";
+
+uint8_t ReadBuffer[2];
+uint16_t ReadBuffer16;
+#define STATUS_MD 0b00100000
+#define STATUS_ML 0b00010000
+#define STATUS_MH 0b00001000
+
+/******** I2C ********/
+/*
+ *  Use MSSP I2C by MCC
+ */
+
+/******** I2C LCD ********/
+#define LCD_ADDR 0x3E
+bool LCD = true;//false;
+
+int is_I2C_Connected(uint8_t slave_address){
+    int exist_the_lcd = 1;  // 0: exist the LCD, 1: No LCD
+    
+    if ( (RC0_GetValue() | RC1_GetValue()) != 0){ // if no pull-up
+        if( I2C_Open(slave_address) == I2C_NOERR){ 
+            exist_the_lcd = 0;
+        } else {
+            if( I2C_Open(slave_address) == I2C_FAIL ){
+                exist_the_lcd = 1;
+            } else {
+                if( I2C_Open(slave_address) == I2C_BUSY ){
+                    exist_the_lcd = 1;
+                }
+            }
+        }
+    }
+    return exist_the_lcd;
+}
+void writeLCDCommand(char t_command){
+    I2C_Write1ByteRegister(LCD_ADDR, 0x00, t_command );
+    __delay_us(30);     //Instruction Execution Time 14.3-26.3us
+}
+void LCD_Init(){
+    __delay_ms(400);
+    writeLCDCommand(0x38);
+    writeLCDCommand(0x39);
+    writeLCDCommand(0x14);
+    writeLCDCommand(0x70);// contast LSB setting ; 0b0111 xxxx
+    writeLCDCommand(0x51);// 5V=0b0101 00xx, 3V=0b0101 01xx,  xx=contrast MSB
+    writeLCDCommand(0x6C);
+    __delay_ms(250);
+    writeLCDCommand(0x38);
+    writeLCDCommand(0x0C);
+    writeLCDCommand(0x01);
+    __delay_us(1100);        //Instruction Execution Time 0.59-1.08ms (550:NG, 600:GOOD)
+}
+void LCD_xy(uint8_t x, uint8_t y){
+    writeLCDCommand(0x80 + 0x40 * y + x);
+}
+void LCD_str2(const char *c) {
+    unsigned char wk;
+    for (int i=0;i<8;i++){
+        wk = c[i];
+        if  (wk == 0x00) break;
+        I2C_Write1ByteRegister(LCD_ADDR, 0x40, wk );
+    }
+    __delay_us(30);
+}
+void LCD_clear(){
+    writeLCDCommand(0x01);
+    __delay_us(1100);        //Instruction Execution Time 0.59-1.08ms (550:NG, 600:GOOD)
+}
+void writeLCDData(char t_data){
+    I2C_Write1ByteRegister(LCD_ADDR, 0x40, t_data );
+    __delay_us(30);     //Instruction Execution Time 14.3-26.3us
+}
+void LCD_SetCG(const char *c){
+    for (int i=0;i<40;i++){
+        writeLCDCommand(0x48+(char)i);
+        writeLCDData(c[i]);
+    }
+}
+
+/******** I2C AS5600 ********/
+#define AS5600_ADDR 0x36
+bool AS5600 = true;//false;
+
+
+void motor_on(unsigned int Direction, uint16_t PWM){
     /*
      * PWM range 0..100 (0%..100%) (PWMDC 0..319)
      */
-    PWM = PWM * 319 /100;
+    PWM = PWM * 319 / 100;
     if (Direction ==1){
         PWM4CONbits.PWM4EN = 0; // REV pin = Disable
         RC4_SetLow(); // REV pin = Low
-        PWM3DCH = (unsigned char)(PWM >> 2);
-        PWM3DCL = (unsigned char)(PWM << 6);
+        PWM3_LoadDutyValue(PWM);
         PWM3CONbits.PWM3EN = 1; // FWD pin = Enable
     }
     if (Direction ==0){
         PWM3CONbits.PWM3EN = 0; // FWD pin = Disable
         RC5_SetLow(); // REV pin = Low
-        PWM4DCH = (unsigned char)(PWM >> 2);
-        PWM4DCL = (unsigned char)(PWM << 6);
+        PWM4_LoadDutyValue(PWM);
         PWM4CONbits.PWM4EN = 1; // REV pin = Enable
     }
 }
@@ -119,6 +205,33 @@ void main(void)
     // Disable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptDisable();
     
+    /*__delay_ms(20);
+    I2C_init();*/
+    __delay_ms(20);
+
+    if ( is_I2C_Connected(LCD_ADDR) == 0 ) {
+        LCD = true; 
+    } else {
+        LCD = false;
+    }
+    __delay_ms(20);
+
+    //I2C_ReadDataBlock(AS5600_ADDR, 0x0b, ReadBuffer, 1);
+
+    if (LCD) {
+        LCD_Init();
+        LCD_clear();
+    }
+    
+    /*if(ReadBuffer[0]=0b01001111){
+        sprintf(DisplayData, "too mag ");
+    } else {
+        if(ReadBuffer[0]=0b01100111){
+            sprintf(DisplayData, "good mag");
+        } else sprintf(DisplayData, "weak mag");
+    } 
+    if (LCD) {LCD_xy(0,1); LCD_str2( DisplayData );}*/
+    
     motor_off();
     while (1)
     {
@@ -145,6 +258,32 @@ void main(void)
         else {
             motor_brake();
         }  
+        I2C_ReadDataBlock(AS5600_ADDR, 0x0c, ReadBuffer, 2);
+        ReadBuffer16 = ReadBuffer[0];
+        ReadBuffer16 = (ReadBuffer16 << 8) | ReadBuffer[1];
+        sprintf(DisplayData, "%05d", ReadBuffer16); 
+        if (LCD) {LCD_xy(0,0); LCD_str2( DisplayData );}
+        __delay_ms(100);
+        I2C_ReadDataBlock(AS5600_ADDR, 0x0b, ReadBuffer, 1);
+        if ( (ReadBuffer[0] & STATUS_MD) == STATUS_MD){
+            sprintf(DisplayData, "Magnet");
+            if (LCD) {LCD_xy(0,1); LCD_str2( DisplayData );}
+        } else {
+            sprintf(DisplayData, "        ");
+            if (LCD) {LCD_xy(0,1); LCD_str2( DisplayData );}
+        }
+        if ( (ReadBuffer[0] & STATUS_ML) == STATUS_ML){
+            sprintf(DisplayData, "L");
+            if (LCD) {LCD_xy(7,1); LCD_str2( DisplayData );}
+        } else {
+            if ( (ReadBuffer[0] & STATUS_MH) == STATUS_MH){
+                sprintf(DisplayData, "H");
+                if (LCD) {LCD_xy(7,1); LCD_str2( DisplayData );}
+            } else {
+                sprintf(DisplayData, " ");
+                if (LCD) {LCD_xy(7,1); LCD_str2( DisplayData );}
+            }    
+        }
 
     }
 }

@@ -1,0 +1,36 @@
+### Module positions - created on  ###
+### Printed by Pcbnew version (6.0.10-0)
+## Unit = mm, Angle = deg.
+## Side : top
+# Ref     Val                  Package                                     PosX       PosY       Rot  Side
+C1        1uF50V               C_0805_2012Metric                         5.3590    64.6890    0.0000  top
+C2        0.1u                 C_0603_1608Metric                        27.3300    79.0400  180.0000  top
+C3        0.01u                C_0603_1608Metric                        20.5990    60.1170   90.0000  top
+C4        0.1u                 C_0603_1608Metric                        15.9000    62.7840  180.0000  top
+C5        10u                  C_0805_2012Metric                        20.0910    18.7150    0.0000  top
+C7        0.1u                 C_0603_1608Metric                        19.7100    39.0350  -90.0000  top
+D1        LED                  LED_0603_1608Metric                      19.7100    69.5150   90.0000  top
+D2        LED                  LED_0603_1608Metric                      19.7100    65.1970   90.0000  top
+J1        USB_C_Receptacle_6   USB_C_6                                   7.0100    77.7700  180.0000  top
+J2        Conn_02x03_Odd_Even  PinHeader_2x03_P2.54mm_Vertical           2.3110    57.3230    0.0000  top
+J3        Conn_01x05           PinHeader_1x05_P2.54mm_Vertical           9.6770    63.8000    0.0000  top
+J4        Conn_02x02_Odd_Even  PinHeader_2x02_P2.54mm_Vertical          13.3600    69.0070    0.0000  top
+M1        Motor_DC             JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical    17.2800     3.4750   90.0000  top
+R1        5.1k                 R_0603_1608Metric                         4.2160    71.2930  180.0000  top
+R2        5.1k                 R_0603_1608Metric                         7.6450    71.2930    0.0000  top
+R3        1k                   R_0603_1608Metric                         1.9300    64.4350  -90.0000  top
+R4        10k                  R_0603_1608Metric                         1.9300    67.6100   90.0000  top
+R5        820                  R_0603_1608Metric                        26.6950    76.2460    0.0000  top
+R6        1k                   R_0603_1608Metric                        22.8850    78.0240  180.0000  top
+R7        10k                  R_0603_1608Metric                         7.0100    61.0060   90.0000  top
+R12       820                  R_0603_1608Metric                        18.4400    42.2100  180.0000  top
+R13       22k                  R_0603_1608Metric                        19.7100    45.3850   90.0000  top
+R15       1k                   R_0603_1608Metric                        22.8850    73.4520  180.0000  top
+R16       1k                   R_0603_1608Metric                        26.0600    72.6900  -90.0000  top
+RV1       50k                  Potentiometer_Vishay_T73YP_Vertical      16.5350    77.7700  180.0000  top
+U1        CH221                SOT-23-6                                  5.7400    68.2450   90.0000  top
+U2        NJL5901AR-1          NJL5901AR-1                              30.0000    77.4500  -90.0000  top
+U3        PIC16F1705-I/SO      SOIC-14_3.9x8.7mm_P1.27mm                15.9000    56.8150    0.0000  top
+U4        ZXBM5210-S           SOIC-8_3.9x4.9mm_P1.27mm                 17.8050    13.6350  -90.0000  top
+U6        NJL5901AR-1          NJL5901AR-1                              18.5000    35.0000  -90.0000  top
+## End

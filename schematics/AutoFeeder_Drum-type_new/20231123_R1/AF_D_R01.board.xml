@@ -1,0 +1,120 @@
+<openpnp-board version="1.1" name="AF_D_R01.board.xml">
+   <dimensions units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
+   <fiducials/>
+   <placements>
+      <placement version="1.4" id="C1" side="Top" part-id="C0603-1uF" type="Placement" enabled="false">
+         <location units="Millimeters" x="5.359" y="64.689" z="0.0" rotation="0.0"/>
+         <comments>N.M</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="C2" side="Top" part-id="C0603-0.1uF" type="Placement" enabled="true">
+         <location units="Millimeters" x="27.33" y="79.04" z="0.0" rotation="180.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="C3" side="Top" part-id="C0603-0.01uF" type="Placement" enabled="true">
+         <location units="Millimeters" x="20.599" y="60.117" z="0.0" rotation="90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="C4" side="Top" part-id="C0603-0.1uF" type="Placement" enabled="true">
+         <location units="Millimeters" x="15.9" y="62.784" z="0.0" rotation="180.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="C5" side="Top" part-id="C0805-4.7u" type="Placement" enabled="true">
+         <location units="Millimeters" x="20.091" y="18.715" z="0.0" rotation="0.0"/>
+         <comments>10uF</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="C7" side="Top" part-id="C0603-0.1uF" type="Placement" enabled="true">
+         <location units="Millimeters" x="19.71" y="39.035" z="0.0" rotation="-90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="D1" side="Top" part-id="D0603-LED-Blue" type="Placement" enabled="true">
+         <location units="Millimeters" x="19.71" y="69.515" z="0.0" rotation="90.0"/>
+         <comments>Green</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="D2" side="Top" part-id="D0603-LED-red" type="Placement" enabled="true">
+         <location units="Millimeters" x="19.71" y="65.197" z="0.0" rotation="90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R1" side="Top" part-id="R0603-5.1k" type="Placement" enabled="true">
+         <location units="Millimeters" x="4.216" y="71.293" z="0.0" rotation="180.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R2" side="Top" part-id="R0603-5.1k" type="Placement" enabled="true">
+         <location units="Millimeters" x="7.645" y="71.293" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R3" side="Top" part-id="R0603-1K" type="Placement" enabled="false">
+         <location units="Millimeters" x="1.93" y="64.435" z="0.0" rotation="-90.0"/>
+         <comments>N.M.</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R4" side="Top" part-id="R0603-10k" type="Placement" enabled="false">
+         <location units="Millimeters" x="1.93" y="67.61" z="0.0" rotation="90.0"/>
+         <comments>N.M.</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R5" side="Top" part-id="R0603-820" type="Placement" enabled="true">
+         <location units="Millimeters" x="26.695" y="76.246" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R6" side="Top" part-id="R0603-1K" type="Placement" enabled="true">
+         <location units="Millimeters" x="22.885" y="78.024" z="0.0" rotation="180.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R7" side="Top" part-id="R0603-10k" type="Placement" enabled="true">
+         <location units="Millimeters" x="7.01" y="61.006" z="0.0" rotation="90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R12" side="Top" part-id="R0603-820" type="Placement" enabled="true">
+         <location units="Millimeters" x="18.44" y="42.21" z="0.0" rotation="180.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R13" side="Top" part-id="R0603-22k" type="Placement" enabled="true">
+         <location units="Millimeters" x="19.71" y="45.385" z="0.0" rotation="90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R15" side="Top" part-id="R0603-1K" type="Placement" enabled="true">
+         <location units="Millimeters" x="22.885" y="73.452" z="0.0" rotation="180.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R16" side="Top" part-id="R0603-1K" type="Placement" enabled="true">
+         <location units="Millimeters" x="26.06" y="72.69" z="0.0" rotation="-90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="U1" side="Top" part-id="SOT-23" type="Placement" enabled="false">
+         <location units="Millimeters" x="5.74" y="68.245" z="0.0" rotation="90.0"/>
+         <comments>N.M. CH221</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="U2" side="Top" part-id="NJL5901AR" type="Placement" enabled="true">
+         <location units="Millimeters" x="30.0" y="77.45" z="0.0" rotation="-90.0"/>
+         <comments>NJL5901-1</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="U4" side="Top" part-id="SOP8-MAX" type="Placement" enabled="true">
+         <location units="Millimeters" x="17.805" y="13.635" z="0.0" rotation="-90.0"/>
+         <comments>BD6211</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="U6" side="Top" part-id="NJL5901AR" type="Placement" enabled="true">
+         <location units="Millimeters" x="18.5" y="35.0" z="0.0" rotation="-90.0"/>
+         <comments>NJL5901-1</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="Fid1" side="Top" part-id="FIDUCIAL_B" type="Fiducial" enabled="true">
+         <location units="Millimeters" x="17.28" y="3.475" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="Fid2" side="Top" part-id="FIDUCIAL_B" type="Fiducial" enabled="true">
+         <location units="Millimeters" x="2.311" y="57.323" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="Fid3" side="Top" part-id="FIDUCIAL_B" type="Fiducial" enabled="true">
+         <location units="Millimeters" x="13.36" y="69.007" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+   </placements>
+   <solder-paste-pads/>
+</openpnp-board>
