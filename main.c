@@ -50,14 +50,6 @@
 #include <string.h>
 #include "mcc_generated_files/examples/i2c_master_example.h"
 
-char DisplayData[8]="12345678";
-
-uint8_t ReadBuffer[2];
-uint16_t ReadBuffer16;
-#define STATUS_MD 0b00100000
-#define STATUS_ML 0b00010000
-#define STATUS_MH 0b00001000
-
 /******** I2C ********/
 /*
  *  Use MSSP I2C by MCC
@@ -66,6 +58,7 @@ uint16_t ReadBuffer16;
 /******** I2C LCD ********/
 #define LCD_ADDR 0x3E
 bool LCD = true;//false;
+char DisplayData[8]="12345678";
 
 int is_I2C_Connected(uint8_t slave_address){
     int exist_the_lcd = 1;  // 0: exist the LCD, 1: No LCD
@@ -94,8 +87,8 @@ void LCD_Init(){
     writeLCDCommand(0x38);
     writeLCDCommand(0x39);
     writeLCDCommand(0x14);
-    writeLCDCommand(0x70);// contast LSB setting ; 0b0111 xxxx
-    writeLCDCommand(0x51);// 5V=0b0101 00xx, 3V=0b0101 01xx,  xx=contrast MSB
+    writeLCDCommand(0x76);// contast LSB setting ; 0b0111 xxxx
+    writeLCDCommand(0x50);// 5V=0b0101 00xx, 3V=0b0101 01xx,  xx=contrast MSB
     writeLCDCommand(0x6C);
     __delay_ms(250);
     writeLCDCommand(0x38);
@@ -133,6 +126,11 @@ void LCD_SetCG(const char *c){
 /******** I2C AS5600 ********/
 #define AS5600_ADDR 0x36
 bool AS5600 = true;//false;
+uint8_t ReadBuffer[2];
+uint16_t ReadBuffer16;
+#define STATUS_MD 0b00100000
+#define STATUS_ML 0b00010000
+#define STATUS_MH 0b00001000
 
 
 void motor_on(unsigned int Direction, uint16_t PWM){
@@ -205,8 +203,6 @@ void main(void)
     // Disable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptDisable();
     
-    /*__delay_ms(20);
-    I2C_init();*/
     __delay_ms(20);
 
     if ( is_I2C_Connected(LCD_ADDR) == 0 ) {
@@ -216,21 +212,10 @@ void main(void)
     }
     __delay_ms(20);
 
-    //I2C_ReadDataBlock(AS5600_ADDR, 0x0b, ReadBuffer, 1);
-
     if (LCD) {
         LCD_Init();
         LCD_clear();
     }
-    
-    /*if(ReadBuffer[0]=0b01001111){
-        sprintf(DisplayData, "too mag ");
-    } else {
-        if(ReadBuffer[0]=0b01100111){
-            sprintf(DisplayData, "good mag");
-        } else sprintf(DisplayData, "weak mag");
-    } 
-    if (LCD) {LCD_xy(0,1); LCD_str2( DisplayData );}*/
     
     motor_off();
     while (1)
@@ -257,34 +242,36 @@ void main(void)
             }
         else {
             motor_brake();
-        }  
+        }
+        
         I2C_ReadDataBlock(AS5600_ADDR, 0x0c, ReadBuffer, 2);
-        ReadBuffer16 = ReadBuffer[0];
+        ReadBuffer16 = ReadBuffer[0] & 0x0f;
         ReadBuffer16 = (ReadBuffer16 << 8) | ReadBuffer[1];
-        sprintf(DisplayData, "%05d", ReadBuffer16); 
-        if (LCD) {LCD_xy(0,0); LCD_str2( DisplayData );}
+        if (LCD){
+            sprintf(DisplayData, "%05d", ReadBuffer16); 
+            LCD_xy(0,0); LCD_str2( DisplayData );
+        }
         __delay_ms(100);
+        
         I2C_ReadDataBlock(AS5600_ADDR, 0x0b, ReadBuffer, 1);
-        if ( (ReadBuffer[0] & STATUS_MD) == STATUS_MD){
-            sprintf(DisplayData, "Magnet");
-            if (LCD) {LCD_xy(0,1); LCD_str2( DisplayData );}
-        } else {
-            sprintf(DisplayData, "        ");
-            if (LCD) {LCD_xy(0,1); LCD_str2( DisplayData );}
-        }
-        if ( (ReadBuffer[0] & STATUS_ML) == STATUS_ML){
-            sprintf(DisplayData, "L");
-            if (LCD) {LCD_xy(7,1); LCD_str2( DisplayData );}
-        } else {
-            if ( (ReadBuffer[0] & STATUS_MH) == STATUS_MH){
-                sprintf(DisplayData, "H");
-                if (LCD) {LCD_xy(7,1); LCD_str2( DisplayData );}
+        if (LCD){
+            if ( (ReadBuffer[0] & STATUS_MD) != 0 ){
+                sprintf(DisplayData, "Magnet");    
             } else {
-                sprintf(DisplayData, " ");
-                if (LCD) {LCD_xy(7,1); LCD_str2( DisplayData );}
-            }    
+                sprintf(DisplayData, "        ");
+            }
+            LCD_xy(0,1); LCD_str2( DisplayData );
+            if ( (ReadBuffer[0] & STATUS_ML) != 0){
+                sprintf(DisplayData, "L");
+            } else {
+                if ( (ReadBuffer[0] & STATUS_MH) != 0){
+                    sprintf(DisplayData, "H");
+                } else {
+                    sprintf(DisplayData, " ");
+                }    
+            }
+            LCD_xy(7,1); LCD_str2( DisplayData );
         }
-
     }
 }
 /**
