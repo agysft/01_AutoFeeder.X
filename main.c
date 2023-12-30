@@ -50,6 +50,136 @@
 #include <string.h>
 #include "mcc_generated_files/examples/i2c_master_example.h"
 
+/******* FLASH *******/
+#define FLASH_ROWSIZE   32      //size of a row
+#define HEFLASH_START   0x1F80  //first address in HE Flash memory
+#define HEFLASH_END     0x1FFF  //last address in HE Flash memory
+
+void _unlock (void)
+{
+    asm("BANKSEL    PMCON2");
+    asm("MOVLW  0x55");
+    asm("MOVWF	PMCON2 & 0x7F");
+    asm("MOVLW	0xAA");
+    asm("MOVWF	PMCON2 & 0x7F");
+    asm("BSF    PMCON1 & 0x7F, 1");
+    asm("NOP");
+    asm("NOP");
+} // unlock
+unsigned FLASH_readConfig (unsigned address)
+{
+    // 1. load the address pointers
+    PMADR = address;
+    PMCON1bits.CFGS = 1;    //select the configuration Flash address space
+    PMCON1bits.RD = 1;  //next operation will be a read
+    NOP();
+    NOP();
+    // 2. return value read
+    return PMDAT; 
+} // FLASH_config
+unsigned FLASH_read (unsigned address) 
+{
+    // 1. load the address pointers
+    PMADR = address;
+    PMCON1bits.CFGS = 0;    //select the Flash address space
+    PMCON1bits.RD = 1;      //next operation will be a read
+    NOP();
+    NOP();
+    // 2. return value read
+    return PMDAT; 
+} // FLASH_read
+void FLASH_readBlock (unsigned *buffer, unsigned address, char count) 
+{
+    while (count > 0)
+    {
+        *buffer++ = FLASH_read (address++);
+        count--; 
+    }
+} // FLASH_readBLock
+void FLASH_write (unsigned address, unsigned data, char latch) 
+{
+    // 1. disable interrupts (remember setting)
+    char temp = INTCONbits.GIE;
+    INTCONbits.GIE = 0;
+    // 2. load the address pointers 
+    PMADR = address;
+    PMDAT = data;
+    PMCON1bits.LWLO = latch;    //1 = latch, 0 = write row
+    PMCON1bits.CFGS = 0;    //select the Flash address space
+    PMCON1bits.FREE = 0;    //next operation will be a write
+    PMCON1bits.WREN = 1;    //enable Flash memory write/erase
+    // 3. perform unlock sequence
+    _unlock();
+    // 4. restore interrupts 
+    if (temp)
+       INTCONbits.GIE = 1;
+}//FLASH_write
+void FLASH_erase (unsigned address)
+{
+    // 1. disable interrupts (remember setting)
+    char temp = INTCONbits.GIE;
+    INTCONbits.GIE = 0;
+    // 2. load the address pointers 
+    PMADR = address;
+    PMCON1bits.CFGS = 0;    // select the Flash address space
+    PMCON1bits.FREE = 1;    // next operation will be an erase
+    PMCON1bits.WREN = 1;    // enable Flash memory write/erase
+    // 3. perform unlock sequence and erase 
+    _unlock();
+    // 4. disable writes and restore interrupts
+    PMCON1bits.WREN = 0; // disable Flash memory write/erase 
+    if (temp)
+       INTCONbits.GIE = 1;
+}//FLASH_erase
+#define HEFLASH_MAXROWS (HEFLASH_END-HEFLASH_START+1)/FLASH_ROWSIZE
+char HEFLASH_writeBlock (char radd, char* data, char count) 
+{
+    // 1. obtain absolute address in HE FLASH row 
+    unsigned add = radd * FLASH_ROWSIZE + HEFLASH_START;
+    // 2. check input parameters
+    if ((count > FLASH_ROWSIZE)||(radd >= HEFLASH_MAXROWS))
+          return -1;//return parameter error
+    // 3. erase the entire row 
+    FLASH_erase (add);
+    // 4. fill the latches with data 
+    while (count > 1)
+    {
+        //load data in latches without writing 
+        FLASH_write (add++, (unsigned) *data++, 1); 
+        count--;
+    } 
+    // no delay here!!!
+    // 5. last byte of data -> write 
+    FLASH_write (add, (unsigned) *data, 0); 
+    // NOTE: 2ms typ. delay here!!!
+    __delay_ms(2);
+    // 6. return success
+    return PMCON1bits.WRERR; //0 success, 1 = write error
+} //HEFLASH_writeBlock
+char HEFLASH_readBlock (char *buffer, char radd, char count) 
+{
+    // 1. obtain absolute address in HE FLASH row 
+    unsigned add = radd * FLASH_ROWSIZE + HEFLASH_START;
+    // 2. check input parameters
+    if ((count > FLASH_ROWSIZE)||(radd >= HEFLASH_MAXROWS))
+        return -1;
+    // 3. read content 
+    while (count > 0)
+    {
+        *buffer++ = (char) FLASH_read (add++);
+        count--; 
+    }
+    // 4. success
+    return 0;
+} //HEFLASH_readBlock
+char HEFLASH_readByte (char radd, char offset) 
+{
+    // 1. add offset into HE Flash memory
+    unsigned add = radd * FLASH_ROWSIZE + HEFLASH_START + offset; 
+    // 2. read content
+    return (char) FLASH_read (add);
+} //HEFLASH_read
+
 /******** I2C ********/
 /*
  *  Use MSSP I2C by MCC
@@ -126,7 +256,7 @@ void LCD_SetCG(const char *c){
 /******** I2C AS5600 ********/
 #define AS5600_ADDR 0x36
 bool AS5600 = true;//false;
-uint8_t ReadBuffer[2];
+uint8_t ReadBuffer[4];
 uint16_t ReadBuffer16;
 #define STATUS_MD 0b00100000
 #define STATUS_ML 0b00010000
@@ -179,12 +309,23 @@ bool isPushed_FWD_SW(void){
         return false;
     }    
 }
-
+bool isPushed_RA2_SW(void){         // for test
+    if ( IO_RA2_GetValue() == 0 ){
+        return true;
+        }
+    else {
+        return false;
+    }    
+}
 /*
                          Main application
  */
+
+
 void main(void)
 {
+    char HEF_buffer [FLASH_ROWSIZE];
+    unsigned r;
     // initialize the device
     SYSTEM_Initialize();
 
@@ -202,7 +343,7 @@ void main(void)
 
     // Disable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptDisable();
-    
+        
     __delay_ms(20);
 
     if ( is_I2C_Connected(LCD_ADDR) == 0 ) {
@@ -212,10 +353,18 @@ void main(void)
     }
     __delay_ms(20);
 
+    r = HEFLASH_readBlock (HEF_buffer, 0, FLASH_ROWSIZE);
     if (LCD) {
         LCD_Init();
         LCD_clear();
+        ReadBuffer16 = HEF_buffer[1];
+        ReadBuffer16 = (ReadBuffer16 << 8) | HEF_buffer[0];
+        sprintf(DisplayData, "%05d", ReadBuffer16);
+        LCD_xy(0,1); LCD_str2( DisplayData );
+        __delay_ms(1000);
     }
+    
+    
     
     motor_off();
     while (1)
@@ -239,14 +388,21 @@ void main(void)
 
         if ( isPushed_REV_SW() ){
                 motor_on(REV, 100);
-            }
-        else {
+        } else {
             motor_brake();
         }
         
+        if ( isPushed_RA2_SW() ){
+            HEF_buffer[1] = ReadBuffer[2];
+            HEF_buffer[0] = ReadBuffer[3];
+            r = HEFLASH_writeBlock(0, HEF_buffer, 2);
+        }
+        
         I2C_ReadDataBlock(AS5600_ADDR, 0x0c, ReadBuffer, 2);
-        ReadBuffer16 = ReadBuffer[0] & 0x0f;
-        ReadBuffer16 = (ReadBuffer16 << 8) | ReadBuffer[1];
+        ReadBuffer[2] = ReadBuffer[0] & 0x0f;
+        ReadBuffer16 = ReadBuffer[2];
+        ReadBuffer[3] = ReadBuffer[1];
+        ReadBuffer16 = (ReadBuffer16 << 8) | ReadBuffer[3];
         if (LCD){
             sprintf(DisplayData, "%05d", ReadBuffer16); 
             LCD_xy(0,0); LCD_str2( DisplayData );
