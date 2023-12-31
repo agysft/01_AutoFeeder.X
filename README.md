@@ -30,3 +30,21 @@ graph LR
 ```
 
 ---
+
+* PIC16F1705でI2C を設定する。何故か400kHzに設定するとハングします。「Registers」で SSP1ADD = 0x9 (=400KHz)に設定することは可能。
+Setting I2C on the PIC16F1705. It hangs when set to 400kHz. It is possible to set SSP1ADD = 0x9 (=400KHz) in "Registers".
+![image](image/01_I2C_setting.png)
+
+* このサンプルコードがよく出来ていてそのままincludeして使える。
+This sample code is well done and can be included and used as is.
+![image](image/02_I2C_setting.png)
+
+* HEF-block範囲にプログラムが書かれないようにする設定
+Settings to prevent programs from being written in the HEF-block range
+![image](image/03_HFE-block-tips.png)
+
+*PICに書いた時にHEFブロックが初期化されない設定
+Settings to prevent the HEF-block from being initialized when writing to the PIC
+![image](image/04_HFE-block-tips.png)
+
+ 

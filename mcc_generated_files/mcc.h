@@ -53,10 +53,10 @@
 #include <stdbool.h>
 #include <conio.h>
 #include "i2c_master.h"
-#include "tmr2.h"
 #include "cmp2.h"
-#include "pwm4.h"
+#include "tmr2.h"
 #include "cmp1.h"
+#include "pwm4.h"
 #include "fvr.h"
 #include "pwm3.h"
 

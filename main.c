@@ -55,9 +55,8 @@
 #define HEFLASH_START   0x1F80  //first address in HE Flash memory
 #define HEFLASH_END     0x1FFF  //last address in HE Flash memory
 
-void _unlock (void)
-{
-    asm("BANKSEL    PMCON2");
+void _unlock (void){
+    asm("BANKSEL PMCON2");
     asm("MOVLW  0x55");
     asm("MOVWF	PMCON2 & 0x7F");
     asm("MOVLW	0xAA");
@@ -66,8 +65,7 @@ void _unlock (void)
     asm("NOP");
     asm("NOP");
 } // unlock
-unsigned FLASH_readConfig (unsigned address)
-{
+unsigned FLASH_readConfig (unsigned address){
     // 1. load the address pointers
     PMADR = address;
     PMCON1bits.CFGS = 1;    //select the configuration Flash address space
@@ -77,8 +75,7 @@ unsigned FLASH_readConfig (unsigned address)
     // 2. return value read
     return PMDAT; 
 } // FLASH_config
-unsigned FLASH_read (unsigned address) 
-{
+unsigned FLASH_read (unsigned address) {
     // 1. load the address pointers
     PMADR = address;
     PMCON1bits.CFGS = 0;    //select the Flash address space
@@ -88,16 +85,14 @@ unsigned FLASH_read (unsigned address)
     // 2. return value read
     return PMDAT; 
 } // FLASH_read
-void FLASH_readBlock (unsigned *buffer, unsigned address, char count) 
-{
+void FLASH_readBlock (unsigned *buffer, unsigned address, char count) {
     while (count > 0)
     {
         *buffer++ = FLASH_read (address++);
         count--; 
     }
 } // FLASH_readBLock
-void FLASH_write (unsigned address, unsigned data, char latch) 
-{
+void FLASH_write (unsigned address, unsigned data, char latch) {
     // 1. disable interrupts (remember setting)
     char temp = INTCONbits.GIE;
     INTCONbits.GIE = 0;
@@ -114,8 +109,7 @@ void FLASH_write (unsigned address, unsigned data, char latch)
     if (temp)
        INTCONbits.GIE = 1;
 }//FLASH_write
-void FLASH_erase (unsigned address)
-{
+void FLASH_erase (unsigned address){
     // 1. disable interrupts (remember setting)
     char temp = INTCONbits.GIE;
     INTCONbits.GIE = 0;
@@ -132,8 +126,7 @@ void FLASH_erase (unsigned address)
        INTCONbits.GIE = 1;
 }//FLASH_erase
 #define HEFLASH_MAXROWS (HEFLASH_END-HEFLASH_START+1)/FLASH_ROWSIZE
-char HEFLASH_writeBlock (char radd, char* data, char count) 
-{
+char HEFLASH_writeBlock (char radd, char* data, char count) {
     // 1. obtain absolute address in HE FLASH row 
     unsigned add = radd * FLASH_ROWSIZE + HEFLASH_START;
     // 2. check input parameters
@@ -156,8 +149,7 @@ char HEFLASH_writeBlock (char radd, char* data, char count)
     // 6. return success
     return PMCON1bits.WRERR; //0 success, 1 = write error
 } //HEFLASH_writeBlock
-char HEFLASH_readBlock (char *buffer, char radd, char count) 
-{
+char HEFLASH_readBlock (char *buffer, char radd, char count) {
     // 1. obtain absolute address in HE FLASH row 
     unsigned add = radd * FLASH_ROWSIZE + HEFLASH_START;
     // 2. check input parameters
@@ -172,8 +164,7 @@ char HEFLASH_readBlock (char *buffer, char radd, char count)
     // 4. success
     return 0;
 } //HEFLASH_readBlock
-char HEFLASH_readByte (char radd, char offset) 
-{
+char HEFLASH_readByte (char radd, char offset) {
     // 1. add offset into HE Flash memory
     unsigned add = radd * FLASH_ROWSIZE + HEFLASH_START + offset; 
     // 2. read content
@@ -353,18 +344,19 @@ void main(void)
     }
     __delay_ms(20);
 
+    // Test reading from HEF-block
     r = HEFLASH_readBlock (HEF_buffer, 0, FLASH_ROWSIZE);
     if (LCD) {
         LCD_Init();
         LCD_clear();
         ReadBuffer16 = HEF_buffer[1];
         ReadBuffer16 = (ReadBuffer16 << 8) | HEF_buffer[0];
-        sprintf(DisplayData, "%05d", ReadBuffer16);
+        sprintf(DisplayData, "%04d", ReadBuffer16);
         LCD_xy(0,1); LCD_str2( DisplayData );
+        sprintf(DisplayData, "%02x", SSP1ADD);  // 0x09=400KHz
+        LCD_xy(6,1); LCD_str2( DisplayData );
         __delay_ms(1000);
     }
-    
-    
     
     motor_off();
     while (1)
@@ -392,7 +384,7 @@ void main(void)
             motor_brake();
         }
         
-        if ( isPushed_RA2_SW() ){
+        if ( isPushed_RA2_SW() ){   // Test writing to HEF-block
             HEF_buffer[1] = ReadBuffer[2];
             HEF_buffer[0] = ReadBuffer[3];
             r = HEFLASH_writeBlock(0, HEF_buffer, 2);
@@ -404,7 +396,7 @@ void main(void)
         ReadBuffer[3] = ReadBuffer[1];
         ReadBuffer16 = (ReadBuffer16 << 8) | ReadBuffer[3];
         if (LCD){
-            sprintf(DisplayData, "%05d", ReadBuffer16); 
+            sprintf(DisplayData, "%04d", ReadBuffer16); 
             LCD_xy(0,0); LCD_str2( DisplayData );
         }
         __delay_ms(100);
