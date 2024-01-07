@@ -1,0 +1,8 @@
+### Module positions - created on  ###
+### Printed by Pcbnew version (6.0.10-0)
+## Unit = mm, Angle = deg.
+## Side : bottom
+# Ref     Val       Package                 PosX       PosY       Rot  Side
+R8        510       R_0603_1608Metric   -57.1750    46.6550  180.0000  bottom
+SW2       IS-2235   Slide-SW-IS-2235    -61.5000    54.5649    0.0000  bottom
+## End
