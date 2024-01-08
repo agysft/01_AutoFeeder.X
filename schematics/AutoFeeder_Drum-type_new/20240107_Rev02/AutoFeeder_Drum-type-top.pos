@@ -8,7 +8,8 @@ C3        0.01u                C_0603_1608Metric                         4.0000 
 C4        0.1u                 C_0603_1608Metric                        13.1060    62.2760  180.0000  top
 C5        10u                  C_0805_2012Metric                        20.0910    18.7150    0.0000  top
 C7        0.1u                 C_0603_1608Metric                        19.7100    39.0350  -90.0000  top
-D1        LED                  LED_0603_1608Metric                      18.5000    51.0000  180.0000  top
+D1        LED                  LED_0603_1608Metric                      21.5000    77.0000  -90.0000  top
+D2        LED                  LED_0603_1608Metric                      21.5000    73.0000  -90.0000  top
 J1        USB_C_Receptacle_6   USB_C_6                                   7.0100    77.2620  180.0000  top
 J2        Conn_01x04           PinHeader_1x04_P2.54mm_Vertical          58.0200    55.0000  -90.0000  top
 J3        Conn_01x05           PinHeader_1x05_P2.54mm_Vertical          18.4400    68.2450    0.0000  top
@@ -30,11 +31,11 @@ R9        10k                  R_0603_1608Metric                        38.7600 
 R10       18k                  R_0603_1608Metric                        37.3630    23.1600   90.0000  top
 R12       820                  R_0603_1608Metric                        18.4400    42.2100  180.0000  top
 R13       22k                  R_0603_1608Metric                        19.7100    45.3850   90.0000  top
-R15       1k                   R_0603_1608Metric                        18.5000    49.0000    0.0000  top
+R15       1k                   R_0603_1608Metric                        21.7420    70.4040  180.0000  top
 RV1       1k                   Potentiometer_Vishay_T73YP_Vertical      42.0000    49.9600    0.0000  top
 RV2       20k                  Potentiometer_Vishay_T73YP_Vertical      41.9600    42.4600    0.0000  top
 RV3       20k                  Potentiometer_Vishay_T73YP_Vertical      42.0000    23.0000    0.0000  top
-SW1       SW_SPDT_AND_Push     THMU26_2                                  2.8500    65.0000  180.0000  top
+SW1       TMHU26               THMU26_2                                  2.8500    65.0000  180.0000  top
 SW3       IS-2235              Slide-SW-IS-2235                         17.8000    77.5000  -90.0000  top
 U1        NJL5901AR-1          NJL5901AR-1                              50.6300    43.7400    0.0000  top
 U2        NJL5901AR-1          NJL5901AR-1                              50.6300    78.2700    0.0000  top
