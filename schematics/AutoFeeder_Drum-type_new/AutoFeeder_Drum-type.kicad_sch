@@ -2573,7 +2573,7 @@
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid d1d7f73f-7d9f-466c-8be1-fc30ab5fb547)
   )
-  (text "Rev.02\n* Add CW/CCW Switch\n* Add Upper IR-LED\n* Add Magnetic Sensor\n* Add Sensor Sensitivity Selector\n* Delete PD IC CH221\n* Add Diode OR (D3 and D4)\n"
+  (text "Rev.02\n* Add CW/CCW Switch\n* Add Upper IR-LED\n* Add Magnetic Sensor\n* Add Sensor Sensitivity Selector (RA4, RA5)\n* Delete PD IC CH221\n* Add Diode OR (D3 and D4)\n"
     (at 181.61 180.34 0)
     (effects (font (size 1.27 1.27)) (justify left bottom))
     (uuid d357a042-0e6e-40b3-8a0f-be295e5923f5)
