@@ -16,7 +16,6 @@
         <itemPath>mcc_generated_files/cmp2.h</itemPath>
         <itemPath>mcc_generated_files/fvr.h</itemPath>
         <itemPath>mcc_generated_files/tmr2.h</itemPath>
-        <itemPath>mcc_generated_files/cmp1.h</itemPath>
         <itemPath>mcc_generated_files/pwm3.h</itemPath>
         <itemPath>mcc_generated_files/pwm4.h</itemPath>
         <itemPath>mcc_generated_files/i2c_master.h</itemPath>
@@ -41,7 +40,6 @@
         <itemPath>mcc_generated_files/cmp2.c</itemPath>
         <itemPath>mcc_generated_files/fvr.c</itemPath>
         <itemPath>mcc_generated_files/tmr2.c</itemPath>
-        <itemPath>mcc_generated_files/cmp1.c</itemPath>
         <itemPath>mcc_generated_files/pwm3.c</itemPath>
         <itemPath>mcc_generated_files/pwm4.c</itemPath>
         <itemPath>mcc_generated_files/i2c_master.c</itemPath>

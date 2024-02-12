@@ -56,7 +56,6 @@ void SYSTEM_Initialize(void)
     WDT_Initialize();
     CMP2_Initialize();
     FVR_Initialize();
-    CMP1_Initialize();
     PWM4_Initialize();
     PWM3_Initialize();
     TMR2_Initialize();

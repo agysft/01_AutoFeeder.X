@@ -178,7 +178,7 @@ char HEFLASH_readByte (char radd, char offset) {
 
 /******** I2C LCD ********/
 #define LCD_ADDR 0x3E
-bool LCD = true;//false;
+bool LCD = true;
 char DisplayData[8]="12345678";
 
 int is_I2C_Connected(uint8_t slave_address){
@@ -253,6 +253,15 @@ uint16_t ReadBuffer16;
 #define STATUS_ML 0b00010000
 #define STATUS_MH 0b00001000
 
+uint16_t readMagData(void){
+    uint16_t rb16;
+    I2C_ReadDataBlock(AS5600_ADDR, 0x0c, ReadBuffer, 2);
+    ReadBuffer[2] = ReadBuffer[0] & 0x0f;
+    rb16 = ReadBuffer[2];
+    ReadBuffer[3] = ReadBuffer[1];
+    rb16 = (rb16 << 8) | ReadBuffer[3];
+    return rb16;
+}
 
 void motor_on(unsigned int Direction, uint16_t PWM){
     /*
@@ -267,33 +276,33 @@ void motor_on(unsigned int Direction, uint16_t PWM){
     }
     if (Direction ==0){
         PWM3CONbits.PWM3EN = 0; // FWD pin = Disable
-        RC5_SetLow(); // REV pin = Low
+        RC5_SetLow(); // FWD pin = Low
         PWM4_LoadDutyValue(PWM);
         PWM4CONbits.PWM4EN = 1; // REV pin = Enable
     }
 }
 void motor_off(void){
     PWM3CONbits.PWM3EN = 0; // FWD pin = Disable
-    RC3_SetLow();
+    RC5_SetLow(); // FWD pin = Low
     PWM4CONbits.PWM4EN = 0; // REV pin = Disable
     RC4_SetLow();    
 }
 void motor_brake(void){
     PWM3CONbits.PWM3EN = 0; // FWD pin = Disable
-    RC3_SetHigh();
+    RC5_SetHigh();
     PWM4CONbits.PWM4EN = 0; // REV pin = Disable
     RC4_SetHigh();    
 }
-bool isPushed_REV_SW(void){
-    if ( IO_RA4_GetValue() == 0 ){
+bool isPushed_CCW_SW(void){
+    if ( IO_RA1_GetValue() == 0 ){
         return true;
         }
     else {
         return false;
     }    
 }
-bool isPushed_FWD_SW(void){
-    if ( IO_RA5_GetValue() == 0 ){
+bool isPushed_CW_SW(void){
+    if ( IO_RC3_GetValue() == 0 ){
         return true;
         }
     else {
@@ -307,6 +316,27 @@ bool isPushed_RA2_SW(void){         // for test
     else {
         return false;
     }    
+}
+#define ColorWhite 0
+#define ColorClear 1
+#define ColorBlack 2
+void setTapeColor(int TapeColor){
+    /*
+     * Feeder Color 0:White, 1:Clear, 2:Black
+     */
+    switch (TapeColor){
+        case ColorClear: // Clear Color
+            IO_RA4_SetHigh();
+            IO_RA5_SetLow();
+            break;
+        case ColorBlack: // Black Color
+            IO_RA4_SetHigh();
+            IO_RA5_SetHigh();
+            break;
+        default: // White Color
+            IO_RA4_SetLow();
+            IO_RA5_SetLow();
+    }
 }
 /*
                          Main application
@@ -356,29 +386,41 @@ void main(void)
         sprintf(DisplayData, "%02x", SSP1ADD);  // 0x09=400KHz
         LCD_xy(6,1); LCD_str2( DisplayData );
         __delay_ms(1000);
+        motor_on(REV, 100);
+        do {
+            __delay_ms(20);
+            if (LCD){
+                sprintf(DisplayData, "%04d", readMagData()); 
+                LCD_xy(0,0); LCD_str2( DisplayData );
+            }
+        } while ( ((ReadBuffer16 +10) < readMagData()) || ((ReadBuffer16 -10) > readMagData()) );
+        LCD_clear();
     }
     
     motor_off();
+    setTapeColor(ColorWhite);
+    //setTapeColor(ColorClear);
+    //setTapeColor(ColorBlack);
     while (1)
     {
         // Add your application code
-        if ( isPushed_FWD_SW() ){
-            motor_on(FWD, 50);
+        if ( isPushed_CW_SW() ){
+            motor_on(FWD, 70);
             if ( RA0_GetValue() == 1 ){
                 while( RA0_GetValue() == 1 ){
-                    if( isPushed_REV_SW() ) break;
-                    __delay_ms(1);
+                    if( isPushed_CCW_SW() ) break;
+                    __delay_ms(20);
                 }
             }
             while( RA0_GetValue()==0 ){
-                if( isPushed_REV_SW() ) break;
-                __delay_ms(1);
+                if( isPushed_CCW_SW() ) break;
+                __delay_ms(20);
             }
             motor_brake();
         }
         __delay_ms(10);
 
-        if ( isPushed_REV_SW() ){
+        if ( isPushed_CCW_SW() ){
                 motor_on(REV, 100);
         } else {
             motor_brake();
@@ -390,13 +432,8 @@ void main(void)
             r = HEFLASH_writeBlock(0, HEF_buffer, 2);
         }
         
-        I2C_ReadDataBlock(AS5600_ADDR, 0x0c, ReadBuffer, 2);
-        ReadBuffer[2] = ReadBuffer[0] & 0x0f;
-        ReadBuffer16 = ReadBuffer[2];
-        ReadBuffer[3] = ReadBuffer[1];
-        ReadBuffer16 = (ReadBuffer16 << 8) | ReadBuffer[3];
         if (LCD){
-            sprintf(DisplayData, "%04d", ReadBuffer16); 
+            sprintf(DisplayData, "%04d", readMagData()); 
             LCD_xy(0,0); LCD_str2( DisplayData );
         }
         __delay_ms(100);
@@ -404,7 +441,7 @@ void main(void)
         I2C_ReadDataBlock(AS5600_ADDR, 0x0b, ReadBuffer, 1);
         if (LCD){
             if ( (ReadBuffer[0] & STATUS_MD) != 0 ){
-                sprintf(DisplayData, "Magnet");    
+                sprintf(DisplayData, "Magnet ");    
             } else {
                 sprintf(DisplayData, "        ");
             }
