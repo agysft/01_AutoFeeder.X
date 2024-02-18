@@ -245,13 +245,13 @@ void LCD_SetCG(const char *c){
 #define AS5600_ADDR 0x36
 bool AS5600 = true;//false;
 uint8_t ReadBuffer[4];
-uint16_t ReadBuffer16;
+int ReadBuffer16;
 #define STATUS_MD 0b00100000
 #define STATUS_ML 0b00010000
 #define STATUS_MH 0b00001000
 
-uint16_t readMagData(void){
-    uint16_t rb16;
+int readMagData(void){
+    int rb16;
     I2C_ReadDataBlock(AS5600_ADDR, 0x0c, ReadBuffer, 2);
     ReadBuffer[2] = ReadBuffer[0] & 0x0f;
     rb16 = ReadBuffer[2];
@@ -349,7 +349,7 @@ void main(void)
 {
     char HEF_buffer [FLASH_ROWSIZE];
     unsigned r;
-    int i, tapeExists;
+    int i, tapeExists, DiffAngle, currentMagData;
     // initialize the device
     SYSTEM_Initialize();
 
@@ -367,7 +367,8 @@ void main(void)
 
     // Disable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptDisable();
-        
+    
+    motor_off();    
     __delay_ms(10);
     if ( is_I2C_Connected(LCD_ADDR) == 0 ) {
         LCD = true; 
@@ -386,9 +387,39 @@ void main(void)
     }
     __delay_ms(10);
     
+    // Read from HEF-block
+    r = HEFLASH_readBlock (HEF_buffer, 0, FLASH_ROWSIZE);
+
+    // Set Tape Color
+    if((HEF_buffer[2] != ColorWhite) && (HEF_buffer[2] != ColorClear) && (HEF_buffer[2] != ColorBlack) ){
+        // set default when no-data
+        setTapeColor(ColorWhite);
+    } else {
+        setTapeColor(HEF_buffer[2]);
+    }
+    if (LCD) {
+        switch(HEF_buffer[2]){
+            case 0:
+                sprintf(DisplayData, "White"); 
+                break;
+            case 1:
+                sprintf(DisplayData, "Clear"); 
+                break;
+            case 2:
+                sprintf(DisplayData, "Black"); 
+                break;
+            default:
+                sprintf(DisplayData, "White");
+        }
+        LCD_xy(0,0); LCD_str2( DisplayData );
+        __delay_ms(1000);
+        LCD_clear();
+    }
+    //setTapeColor(ColorWhite);
+    //setTapeColor(ColorClear);
+    //setTapeColor(ColorBlack);
+    
     if (AS5600) {
-        // Test reading from HEF-block
-        r = HEFLASH_readBlock (HEF_buffer, 0, FLASH_ROWSIZE);
         ReadBuffer16 = HEF_buffer[1];
         ReadBuffer16 = (ReadBuffer16 << 8) | HEF_buffer[0];
         if (LCD){
@@ -397,22 +428,25 @@ void main(void)
             sprintf(DisplayData, "%02x", SSP1ADD);
             LCD_xy(6,1); LCD_str2( DisplayData );
         }
+        // Rotate in the direction of close to the distance
+        DiffAngle = readMagData() + 4096 - ReadBuffer16;
+        if (DiffAngle > 4095) DiffAngle -= 4096;
         __delay_ms(1000);
-        motor_on(REV, 100);
+        if( 0 > ( DiffAngle - 2048 ) ) {
+            motor_on(FWD, 100);
+        } else motor_on(REV, 100);
         do {
-            __delay_ms(20);
+            currentMagData = readMagData();
             if (LCD){
-                sprintf(DisplayData, "%04d", readMagData()); 
+                sprintf(DisplayData, "%04d", currentMagData); 
                 LCD_xy(0,0); LCD_str2( DisplayData );
             }
-        } while ( ((ReadBuffer16 +10) < readMagData()) || ((ReadBuffer16 -10) > readMagData()) );
-        if (LCD) LCD_clear();
+            __delay_ms(20);
+        } while ( ((ReadBuffer16 +5) < currentMagData) || ((ReadBuffer16 -5) > currentMagData) );
+        motor_brake();
+        if (LCD) LCD_clear(); 
     }
-    
-    motor_off();
-    //setTapeColor(ColorWhite);
-    setTapeColor(ColorClear);
-    //setTapeColor(ColorBlack);
+
     while (1)
     {
         // Add your application code
@@ -438,11 +472,12 @@ void main(void)
         }
         
         if ( isPushed_RA2_SW() ){
-            // Test writing to HEF-block
             if (AS5600) {
+                //Save Mag Position
                 HEF_buffer[1] = ReadBuffer[2];
                 HEF_buffer[0] = ReadBuffer[3];
-                r = HEFLASH_writeBlock(0, HEF_buffer, 2);
+                //Color Data
+                //HEF_buffer[2] = Color;
             }
             // Auto Select the Tape Color
             tapeExists = 0;
@@ -465,6 +500,7 @@ void main(void)
             }
             if (tapeExists == 2){
                 // Found White tape
+                HEF_buffer[2] = ColorWhite; //Memorize Color for next startup
                 if (LCD) {
                     sprintf(DisplayData, "White"); 
                     LCD_xy(0,0); LCD_str2( DisplayData );
@@ -490,6 +526,7 @@ void main(void)
                 }
                 if (tapeExists == 2){
                     // Found Clear tape
+                    HEF_buffer[2] = ColorClear; //Memorize Color for next startup
                     if (LCD) {
                         sprintf(DisplayData, "Clear"); 
                         LCD_xy(0,0); LCD_str2( DisplayData );
@@ -515,12 +552,14 @@ void main(void)
                     }
                     if (tapeExists == 2){
                         // Found Black tape
+                        HEF_buffer[2] = ColorBlack; //Memorize Color for next startup
                         if (LCD) {
                             sprintf(DisplayData, "Black"); 
                             LCD_xy(0,0); LCD_str2( DisplayData );
                         }
                     } else {
                         // No Tape found
+                        HEF_buffer[2] = ColorWhite; //Memorize Default Color for next startup
                         if (LCD) {
                             sprintf(DisplayData, "No tape"); 
                             LCD_xy(0,0); LCD_str2( DisplayData );
@@ -528,6 +567,8 @@ void main(void)
                     }
                 }
             }
+            // Write to HEF-block
+            r = HEFLASH_writeBlock(0, HEF_buffer, 3);
             __delay_ms(1000);
             if (LCD) LCD_clear();
         }

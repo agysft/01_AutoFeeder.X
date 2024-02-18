@@ -28,6 +28,46 @@ graph LR
 ### Rev.02
 * [demo](image/20240212_AutoFeederTest-ezgif.com-video-to-gif-converter.gif)
 * [schematics](schematics/AutoFeeder_Drum-type_new/20240107_Rev02/AutoFeeder_Drum-type.pdf) 
+* block chart
+```mermaid
+graph LR
+  A[Timer2 50KHz]-->B[PWM3 --> RC5]---C
+  subgraph BA6211
+  C[FWD]
+  E[REV]
+  end
+  BA6211 --- Z[Motor]
+  A-->D[PWM4 --> RC4]---E
+  F[Sensor0 Tape-hole detector]--> S{Switch}
+  G[Senror1 Radder detector]--> S
+  S -->| < - > |M[CMP2 --> RA0]-->N[LED]
+    L[FVR 2.048V]-->|< + >|M
+RA4[GPIO RA4 Open Drain]---H[Optical Sensor Sensitivity Selector]
+RA5[GPIO RA5 Open Drain]---H
+subgraph SW1 TMHU26
+CW[Switch CW]
+CCW[Switch CCW]
+P[Switch Push]
+end
+CW---RC3[GPIO RC3]
+CCW---RA1[GPIO RA1]
+P---RA2[GPIO RA2]
+subgraph I2C
+SCL[SCL]
+SDA[SDA]
+end
+SCL---LCD[LCD 0x3E]
+SDA---LCD
+SCL---MAG[Magnetic Sensor 0x36]
+SDA---MAG
+```
+* variables
+  | HEF_buffer | note |
+  ----|---- 
+  | 2 | Tape Color |
+  | 1 | Mag Position (High 4bit)|
+  | 0 | Mag Position (Low 8bit) |
+
 ---
 ---
 ### Tips
