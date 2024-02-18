@@ -2,15 +2,15 @@
 
 manifest_file_version: 1.0.0
 project: 01_AutoFeeder
-creation_date: 2024-02-12T09:53:08.985+09:00[Asia/Tokyo]
+creation_date: 2024-02-18T10:31:58.443+09:00[Asia/Tokyo]
 operating_system: Mac OS X
 mcc_mode: IDE
-mcc_mode_version: v6.15
+mcc_mode_version: v6.20
 device_name: PIC16F1705
-compiler: XC8 2.35
-mcc_version: 5.4.1
-mcc_core_version: 5.6.1
-content_manager_version: 4.3.2
+compiler: XC8 2.46
+mcc_version: 5.5.0
+mcc_core_version: 5.7.0
+content_manager_version: 5.0.0
 is_mcc_offline: false
 is_using_prerelease_versions: false
 mcc_content_registries: https://registry.npmjs.org/

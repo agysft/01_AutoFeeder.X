@@ -1,4 +1,4 @@
-<config configName="default" projectName="01_AutoFeeder" configVersion="1.1" device="PIC16F1705" deviceLibraryClass="com.microchip.mcc.mcu8.Mcu8PeripheralLibrary" coreVersion="5.6.1">
+<config configName="default" projectName="01_AutoFeeder" configVersion="1.1" device="PIC16F1705" deviceLibraryClass="com.microchip.mcc.mcu8.Mcu8PeripheralLibrary" coreVersion="5.7.0">
    <usedPackages class="java.util.ArrayList"/>
    <usedClasses class="java.util.TreeMap">
       <entry>
@@ -700,7 +700,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="MSSP" name="ActI2cClkSpeed"/>
-         <value>100000.00</value>
+         <value>400000.00</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="MSSP" name="ActSpiClkSpeed"/>
@@ -1144,7 +1144,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="MSSP" registerAlias="SSPADD"/>
-         <value>39</value>
+         <value>9</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="MSSP" registerAlias="SSPBUF"/>
@@ -1184,7 +1184,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="MSSP" registerAlias="SSPADD" settingAlias="SSPADD"/>
-         <value>39</value>
+         <value>9</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="MSSP" registerAlias="SSPBUF" settingAlias="SSPBUF"/>
@@ -4242,7 +4242,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files/i2c_master.c</file>
-         <hash>0597bf07cbc9891db2d9145614343d670b21a84e9e10c3b1d951282a94dc8e8f</hash>
+         <hash>cf523efbca1cd2408f9a12a0d005fc393163ed87a244d3d9621ac7c899b2a501</hash>
       </entry>
       <entry>
          <file>mcc_generated_files/i2c_master.h</file>
@@ -4250,11 +4250,11 @@
       </entry>
       <entry>
          <file>mcc_generated_files/mcc.c</file>
-         <hash>ff4c9ebdd8b1c155f2dd8173baef9241e68a21e81179f2e92a3f5f1707fa5dc5</hash>
+         <hash>1e179076ffa11b5ada4b8bd1cbebc98650b11925bf04fccb5f550ed548f0635e</hash>
       </entry>
       <entry>
          <file>mcc_generated_files/mcc.h</file>
-         <hash>7f5b65c735307d1dc927c27dba6693f1f9b5634ce2f31cd8e484a0f67580dd60</hash>
+         <hash>8a9eefdad32d29ff606b903688267a87dbd8abff06857dc86ce248bb760e99ac</hash>
       </entry>
       <entry>
          <file>mcc_generated_files/pin_manager.c</file>

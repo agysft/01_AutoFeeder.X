@@ -42,9 +42,6 @@
 */
 
 #include "mcc_generated_files/mcc.h"
-// Motor Direction
-#define FWD 1
-#define REV 0
 
 #include <stdio.h>
 #include <string.h>
@@ -262,7 +259,10 @@ uint16_t readMagData(void){
     rb16 = (rb16 << 8) | ReadBuffer[3];
     return rb16;
 }
-
+/******** Motor Control ********/
+// Motor Direction
+#define FWD 1
+#define REV 0
 void motor_on(unsigned int Direction, uint16_t PWM){
     /*
      * PWM range 0..100 (0%..100%) (PWMDC 0..319)
@@ -293,6 +293,7 @@ void motor_brake(void){
     PWM4CONbits.PWM4EN = 0; // REV pin = Disable
     RC4_SetHigh();    
 }
+/******** Read Switches ********/
 bool isPushed_CCW_SW(void){
     if ( IO_RA1_GetValue() == 0 ){
         return true;
@@ -317,6 +318,7 @@ bool isPushed_RA2_SW(void){         // for test
         return false;
     }    
 }
+/******** Select Sensor sensitivity  ********/
 #define ColorWhite 0
 #define ColorClear 1
 #define ColorBlack 2
@@ -347,6 +349,7 @@ void main(void)
 {
     char HEF_buffer [FLASH_ROWSIZE];
     unsigned r;
+    int i, tapeExists;
     // initialize the device
     SYSTEM_Initialize();
 
@@ -365,26 +368,35 @@ void main(void)
     // Disable the Peripheral Interrupts
     //INTERRUPT_PeripheralInterruptDisable();
         
-    __delay_ms(20);
-
+    __delay_ms(10);
     if ( is_I2C_Connected(LCD_ADDR) == 0 ) {
         LCD = true; 
     } else {
         LCD = false;
     }
-    __delay_ms(20);
-
-    // Test reading from HEF-block
-    r = HEFLASH_readBlock (HEF_buffer, 0, FLASH_ROWSIZE);
     if (LCD) {
         LCD_Init();
         LCD_clear();
+    }
+    __delay_ms(10);
+    if ( is_I2C_Connected(AS5600_ADDR) == 0 ) {
+        AS5600 = true; 
+    } else {
+        AS5600 = false;
+    }
+    __delay_ms(10);
+    
+    if (AS5600) {
+        // Test reading from HEF-block
+        r = HEFLASH_readBlock (HEF_buffer, 0, FLASH_ROWSIZE);
         ReadBuffer16 = HEF_buffer[1];
         ReadBuffer16 = (ReadBuffer16 << 8) | HEF_buffer[0];
-        sprintf(DisplayData, "%04d", ReadBuffer16);
-        LCD_xy(0,1); LCD_str2( DisplayData );
-        sprintf(DisplayData, "%02x", SSP1ADD);  // 0x09=400KHz
-        LCD_xy(6,1); LCD_str2( DisplayData );
+        if (LCD){
+            sprintf(DisplayData, "%04d", ReadBuffer16);
+            LCD_xy(0,1); LCD_str2( DisplayData );
+            sprintf(DisplayData, "%02x", SSP1ADD);
+            LCD_xy(6,1); LCD_str2( DisplayData );
+        }
         __delay_ms(1000);
         motor_on(REV, 100);
         do {
@@ -394,27 +406,26 @@ void main(void)
                 LCD_xy(0,0); LCD_str2( DisplayData );
             }
         } while ( ((ReadBuffer16 +10) < readMagData()) || ((ReadBuffer16 -10) > readMagData()) );
-        LCD_clear();
+        if (LCD) LCD_clear();
     }
     
     motor_off();
-    setTapeColor(ColorWhite);
-    //setTapeColor(ColorClear);
+    //setTapeColor(ColorWhite);
+    setTapeColor(ColorClear);
     //setTapeColor(ColorBlack);
     while (1)
     {
         // Add your application code
         if ( isPushed_CW_SW() ){
-            motor_on(FWD, 70);
-            if ( RA0_GetValue() == 1 ){
-                while( RA0_GetValue() == 1 ){
-                    if( isPushed_CCW_SW() ) break;
-                    __delay_ms(20);
-                }
-            }
-            while( RA0_GetValue()==0 ){
+            motor_on(FWD, 100);
+            __delay_ms(20);
+            while( RA0_GetValue() == 1 ){
                 if( isPushed_CCW_SW() ) break;
-                __delay_ms(20);
+            }
+            motor_on(FWD, 60);
+            __delay_ms(10);
+            while( RA0_GetValue() == 0 ){
+                if( isPushed_CCW_SW() ) break;
             }
             motor_brake();
         }
@@ -426,10 +437,99 @@ void main(void)
             motor_brake();
         }
         
-        if ( isPushed_RA2_SW() ){   // Test writing to HEF-block
-            HEF_buffer[1] = ReadBuffer[2];
-            HEF_buffer[0] = ReadBuffer[3];
-            r = HEFLASH_writeBlock(0, HEF_buffer, 2);
+        if ( isPushed_RA2_SW() ){
+            // Test writing to HEF-block
+            if (AS5600) {
+                HEF_buffer[1] = ReadBuffer[2];
+                HEF_buffer[0] = ReadBuffer[3];
+                r = HEFLASH_writeBlock(0, HEF_buffer, 2);
+            }
+            // Auto Select the Tape Color
+            tapeExists = 0;
+            setTapeColor(ColorWhite);
+            motor_on(FWD, 100);
+            for(i=0;i<100;i++){
+                if (RA0_GetValue() == 1){
+                    tapeExists++;
+                    break;
+                }
+                __delay_ms(10);
+            }
+            motor_on(REV, 100);
+            for(i=0;i<100;i++){
+                if (RA0_GetValue() == 0){
+                    tapeExists++;
+                    break;
+                }
+                __delay_ms(10);
+            }
+            if (tapeExists == 2){
+                // Found White tape
+                if (LCD) {
+                    sprintf(DisplayData, "White"); 
+                    LCD_xy(0,0); LCD_str2( DisplayData );
+                }
+            } else {
+                tapeExists = 0;
+                setTapeColor(ColorClear);
+                motor_on(FWD, 100);
+                for(i=0;i<100;i++){
+                    if (RA0_GetValue() == 1){
+                        tapeExists++;
+                        break;
+                    }
+                    __delay_ms(10);
+                }
+                motor_on(REV, 100);
+                for(i=0;i<100;i++){
+                    if (RA0_GetValue() == 0){
+                        tapeExists++;
+                        break;
+                    }
+                    __delay_ms(10);
+                }
+                if (tapeExists == 2){
+                    // Found Clear tape
+                    if (LCD) {
+                        sprintf(DisplayData, "Clear"); 
+                        LCD_xy(0,0); LCD_str2( DisplayData );
+                    }
+                } else {
+                    tapeExists = 0;
+                    setTapeColor(ColorBlack);
+                    motor_on(FWD, 100);
+                    for(i=0;i<100;i++){
+                        if (RA0_GetValue() == 1){
+                            tapeExists++;
+                            break;
+                        }
+                        __delay_ms(10);
+                    }
+                    motor_on(REV, 100);
+                    for(i=0;i<100;i++){
+                        if (RA0_GetValue() == 0){
+                            tapeExists++;
+                            break;
+                        }
+                        __delay_ms(10);
+                    }
+                    if (tapeExists == 2){
+                        // Found Black tape
+                        if (LCD) {
+                            sprintf(DisplayData, "Black"); 
+                            LCD_xy(0,0); LCD_str2( DisplayData );
+                        }
+                    } else {
+                        // No Tape found
+                        if (LCD) {
+                            sprintf(DisplayData, "No tape"); 
+                            LCD_xy(0,0); LCD_str2( DisplayData );
+                        }
+                    }
+                }
+            }
+            __delay_ms(1000);
+            if (LCD) LCD_clear();
         }
         
         if (LCD){
