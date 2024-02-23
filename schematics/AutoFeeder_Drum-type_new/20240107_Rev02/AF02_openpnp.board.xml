@@ -1,0 +1,200 @@
+<openpnp-board version="1.1" name="AF02_openpnp.board.xml">
+   <dimensions units="Millimeters" x="0.0" y="0.0" z="0.0" rotation="0.0"/>
+   <fiducials/>
+   <placements>
+      <placement version="1.4" id="Fid2" side="Top" part-id="FIDUCIAL-1X2-FIDUCIAL1X2" type="Fiducial" enabled="true">
+         <location units="Millimeters" x="58.5" y="76.0" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="Fid1" side="Top" part-id="FIDUCIAL-1X2-FIDUCIAL1X2" type="Fiducial" enabled="true">
+         <location units="Millimeters" x="5.0" y="77.5" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="Fid3" side="Top" part-id="FIDUCIAL-1X2-FIDUCIAL1X2" type="Fiducial" enabled="true">
+         <location units="Millimeters" x="58.0" y="46.0" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="Fid4" side="Top" part-id="FIDUCIAL-1X2-FIDUCIAL1X2" type="Fiducial" enabled="true">
+         <location units="Millimeters" x="15.2" y="6.8" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="C2" side="Top" part-id="C0603-0.1uF" type="Placement" enabled="true">
+         <location units="Millimeters" x="51.46" y="64.0" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="C3" side="Top" part-id="C0603-0.01uF" type="Placement" enabled="true">
+         <location units="Millimeters" x="10.82" y="67.483" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="C4" side="Top" part-id="C0603-0.1uF" type="Placement" enabled="true">
+         <location units="Millimeters" x="13.106" y="62.276" z="0.0" rotation="180.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="C5" side="Top" part-id="C0805-4.7u" type="Placement" enabled="true">
+         <location units="Millimeters" x="20.091" y="25.7" z="0.0" rotation="0.0"/>
+         <comments>10uF</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="C7" side="Top" part-id="C0603-0.1uF" type="Placement" enabled="true">
+         <location units="Millimeters" x="19.71" y="39.035" z="0.0" rotation="-90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="D1" side="Top" part-id="D0603-LED-Blue" type="Placement" enabled="true">
+         <location units="Millimeters" x="21.742" y="77.008" z="0.0" rotation="-90.0"/>
+         <comments>Green</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="D2" side="Top" part-id="D0603-LED-red" type="Placement" enabled="true">
+         <location units="Millimeters" x="21.742" y="73.0" z="0.0" rotation="-90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="D3" side="Top" part-id="SOD-323-2" type="Placement" enabled="true">
+         <location units="Millimeters" x="10.058" y="65.07" z="0.0" rotation="0.0"/>
+         <comments>1SS355</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="D4" side="Top" part-id="SOD-323-2" type="Placement" enabled="true">
+         <location units="Millimeters" x="16.72" y="50.496" z="0.0" rotation="0.0"/>
+         <comments>1SS355</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="J1" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="7.01" y="77.262" z="0.0" rotation="180.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="J2" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="58.02" y="55.0" z="0.0" rotation="-90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="J3" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="18.44" y="68.245" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="J4" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="33.045" y="74.595" z="0.0" rotation="90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="J5" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="58.0" y="67.0" z="0.0" rotation="-90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="J6" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="5.74" y="52.37" z="0.0" rotation="180.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="J7" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="36.855" y="30.653" z="0.0" rotation="180.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="J8" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="44.475" y="31.913" z="0.0" rotation="180.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="J9" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="41.5" y="69.5" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="JP2" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="14.757" y="65.705" z="0.0" rotation="90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="M1" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="17.28" y="11.095" z="0.0" rotation="90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R1" side="Top" part-id="R0603-5.1k" type="Placement" enabled="true">
+         <location units="Millimeters" x="10.82" y="69.134" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R2" side="Top" part-id="R0603-5.1k" type="Placement" enabled="true">
+         <location units="Millimeters" x="10.82" y="70.785" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R4" side="Top" part-id="R0603-1K" type="Placement" enabled="true">
+         <location units="Millimeters" x="9.169" y="62.276" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R5" side="Top" part-id="R0603-820" type="Placement" enabled="true">
+         <location units="Millimeters" x="55.397" y="71.42" z="0.0" rotation="90.0"/>
+         <comments>510Ω</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R6" side="Top" part-id="R0603-1K" type="Placement" enabled="true">
+         <location units="Millimeters" x="41.935" y="58.0" z="0.0" rotation="-90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R7" side="Top" part-id="R0603-10k" type="Placement" enabled="true">
+         <location units="Millimeters" x="8.28" y="58.593" z="0.0" rotation="90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R9" side="Top" part-id="R0603-0" type="Placement" enabled="false">
+         <location units="Millimeters" x="38.76" y="58.0" z="0.0" rotation="-90.0"/>
+         <comments>N.M.</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R10" side="Top" part-id="R0603-0" type="Placement" enabled="false">
+         <location units="Millimeters" x="37.363" y="48.56" z="0.0" rotation="90.0"/>
+         <comments>N.M.</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R12" side="Top" part-id="R0603-820" type="Placement" enabled="true">
+         <location units="Millimeters" x="18.44" y="42.21" z="0.0" rotation="180.0"/>
+         <comments>510Ω</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R13" side="Top" part-id="R0603-22k" type="Placement" enabled="true">
+         <location units="Millimeters" x="19.71" y="45.385" z="0.0" rotation="90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="R15" side="Top" part-id="R0603-1K" type="Placement" enabled="true">
+         <location units="Millimeters" x="21.742" y="70.404" z="0.0" rotation="180.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="RV1" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="42.0" y="49.96" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="RV2" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="41.96" y="42.46" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="RV3" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="42.0" y="21.255" z="0.0" rotation="0.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="SW1" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="2.85" y="65.705" z="0.0" rotation="180.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="SW3" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="17.8" y="77.5" z="0.0" rotation="-90.0"/>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="U1" side="Top" part-id="NJL5901AR" type="Placement" enabled="true">
+         <location units="Millimeters" x="50.63" y="43.74" z="0.0" rotation="0.0"/>
+         <comments>NJL5901AR-1</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="U2" side="Top" part-id="NJL5901AR" type="Placement" enabled="true">
+         <location units="Millimeters" x="50.63" y="78.27" z="0.0" rotation="0.0"/>
+         <comments>NJL5901AR-1</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="U3" side="Top" type="Placement" enabled="false">
+         <location units="Millimeters" x="12.725" y="56.815" z="0.0" rotation="0.0"/>
+         <comments>PIC</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="U4" side="Top" part-id="SOP8-MAX" type="Placement" enabled="true">
+         <location units="Millimeters" x="17.805" y="20.62" z="0.0" rotation="-90.0"/>
+         <comments>BD6211</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+      <placement version="1.4" id="U6" side="Top" part-id="NJL5901AR" type="Placement" enabled="true">
+         <location units="Millimeters" x="18.5" y="35.0" z="0.0" rotation="-90.0"/>
+         <comments>NJL5901AR-1</comments>
+         <error-handling>Alert</error-handling>
+      </placement>
+   </placements>
+   <solder-paste-pads/>
+</openpnp-board>

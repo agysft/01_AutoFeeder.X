@@ -47,12 +47,12 @@ graph LR
   RA5[GPIO RA5 Open Drain]---H
 ```
 
-* variables
+* HEF Memory (= EEPROM) usage
   | HEF_buffer | note |
-  ----|---- 
-  | 2 | Tape Color |
-  | 1 | Mag Position (High 4bit)|
-  | 0 | Mag Position (Low 8bit) |
+  |:--:|---- 
+  | 2 | Tape Color (0..2)|
+  | 1 | Mag Position (MSB 2bit)|
+  | 0 | Mag Position (LSB 8bit) |
 
 ---
 ---
