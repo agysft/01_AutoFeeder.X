@@ -25,34 +25,48 @@ graph LR
   I[Sensor1]-->|-|Q[CMP1]-->K[LED Red]
 ```
 ---
+
 ### Rev.02
+フォトセンサーの感度を切り替える回路と、ドラムの角度を取得するためのAS5600という磁気センサーと、LCDを接続とを追加。Add a circuit to switch the sensitivity of the photo sensor, a magnetic sensor named AS5600 to get the angle of the drum, and the LCD.
 * [demo](image/20240212_AutoFeederTest-ezgif.com-video-to-gif-converter.gif)
 * [schematics](schematics/AutoFeeder_Drum-type_new/20240107_Rev02/AutoFeeder_Drum-type.pdf) 
 * block chart
 
 ```mermaid
 graph LR
-  A[Timer2 50KHz]-->B[PWM3 -- RC5]---C
+  G[Senror1 Radder detector]--> S
+  F[Sensor0 Tape-hole detector]--> S
+  S{Switch} -->| M- |M
   subgraph BA6211
   C[FWD]
   E[REV]
   end
   BA6211 --- Z[Motor]
-  A-->D[PWM4 -- RC4]---E
-  F[Sensor0 Tape-hole detector]--> S{Switch}
-  G[Senror1 Radder detector]--> S
-  S -->| M- |M[CMP2 -- RA0]-->N[LED]
-    L[FVR 2.048V]-->| P+ |M
-  RA4[GPIO RA4 Open Drain]---H[Optical Sensor Sensitivity Selector]
-  RA5[GPIO RA5 Open Drain]---H
+  subgraph PIC16F1705
+  A[Timer2 50KHz]-->D
+  A-->B
+  B[PWM3 -- RC5]---C
+  D[PWM4 -- RC4]---E
+  L[FVR 2.048V]-->| P+ |M[CMP2 -- RA0]
+  RA4[GPIO RA4 Open Drain]
+  RA5[GPIO RA5 Open Drain]
+  end
+  M-->N[LED]
+  AS5600---|I2C|PIC16F1705
+  PIC16F1705---|I2C|LCD
+  
+  H[Optical Sensor Sensitivity Selector]---RA4
+  H---RA5
 ```
 
-* HEF Memory (= EEPROM) usage
-  | HEF_buffer | note |
+* High-Endurance Flash memory (HEF) usage 0x1F80-0x1F9F
+  | Offset Address | note (1 word = 14-bit wide) |
   |:--:|---- 
-  | 2 | Tape Color (0..2)|
-  | 1 | Mag Position (MSB 2bit)|
-  | 0 | Mag Position (LSB 8bit) |
+  | 25 .. 31 | No Use |
+  | 2 .. 24 | Tape hole position data (12-bit wide) |
+  | 1 | Tape-Color data (White/Transparent/Black)|
+  | 0 | AS5600 Magnetic data of origin (12-bit wide) |
+* HEF 0x1FA0-0x1FFF is not use.
 
 ---
 ---
@@ -63,8 +77,8 @@ graph LR
   Setting I2C on the PIC16F1705. It hangs when set to 400kHz. It is possible to set SSP1ADD = 0x9 (=400KHz) in "Registers".
   ![image](image/01_I2C_setting.png)
 
-* このサンプルコードがよく出来ていてそのままincludeして使える。
-  This sample code is well done and can be included and used as is.
+* このI2Cのサンプルコードがよく出来ていてそのままincludeして使える。
+  This I2C sample code is well done and can be included and used as is.
   ![image](image/02_I2C_setting.png)
 
 * HEF-block範囲にプログラムが書かれないようにする設定。
