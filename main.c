@@ -245,7 +245,6 @@ void LCD_SetCG(const char *c){
 #define AS5600_ADDR 0x36
 bool AS5600 = true;//false;
 uint8_t ReadBuffer[4];
-//int ReadBuffer16;
 #define STATUS_MD 0b00100000
 #define STATUS_ML 0b00010000
 #define STATUS_MH 0b00001000
@@ -311,7 +310,7 @@ bool isPushed_CW_SW(void){
         return false;
     }    
 }
-bool isPushed_Push_SW(void){         // for test
+bool isPushed_Push_SW(void){
     if ( IO_RA2_GetValue() == 0 ){
         return true;
         }
@@ -477,7 +476,7 @@ void main(void)
         if (LCD){
             sprintf(DisplayData, "%04d", HEF_buffer14[0]);
             LCD_xy(0,1); LCD_str2( DisplayData );
-            sprintf(DisplayData, "%02x", SSP1ADD);
+            sprintf(DisplayData, "%02x", SSP1ADD);  //Display I2C Speed for test
             LCD_xy(6,1); LCD_str2( DisplayData );
             __delay_ms(1000);
         }
@@ -488,7 +487,7 @@ void main(void)
         __delay_ms(1000);
         for(i=1;i<=22;i++){ // i=1 : Ignore the first data
             if (LCD){
-                sprintf(DisplayData, "%04d", HEF_buffer14[2+i]);
+                sprintf(DisplayData, "%04d  %02d", HEF_buffer14[2+i], i);
                 LCD_xy(0,1); LCD_str2( DisplayData );
             }
             RotateToTarget((int) HEF_buffer14[2+i] );
@@ -499,7 +498,7 @@ void main(void)
             LCD_xy(0,0); LCD_str2( "Rewind!" );
         }
         motor_on(REV, 100);
-        __delay_ms(9000);
+        __delay_ms(11500);     //move to near by target
         if (LCD) LCD_clear();
         RotateToTarget((int) HEF_buffer14[0] );
     }
@@ -535,7 +534,7 @@ void main(void)
             }
             // Detect current Tape Color
             for(i=0;i<4;i++){
-                setTapeColor(i);
+                setTapeColor(i);    // 0:White, 1:Clear, 2:Black
                 if ( isExist_Hole() ) break;
             }
             if (i < 3) {
@@ -547,7 +546,7 @@ void main(void)
             HEF_buffer14[1] = (unsigned)i;
             if (LCD) { LCD_xy(0,0); LCD_str2( DisplayData ); }
             
-            RotateToTarget((int)HEF_buffer14[0]);
+            RotateToTarget((int)HEF_buffer14[0]);   //return to Saved Mag Pos
 
             // Memorizes 21 hole positions
             __delay_ms(1000);
@@ -567,7 +566,7 @@ void main(void)
                     LCD_xy(0,0); LCD_str2( "Rewind!" );
                 }
                 motor_on(REV, 100);
-                __delay_ms(9000);
+                __delay_ms(11500);   //move to near by target
                 if (LCD) LCD_clear();
                 RotateToTarget((int) HEF_buffer14[0] );
             }

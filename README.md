@@ -27,7 +27,8 @@ graph LR
 ---
 
 ### Rev.02
-フォトセンサーの感度を切り替える回路と、ドラムの角度を取得するためのAS5600という磁気センサーと、LCDを接続とを追加。Add a circuit to switch the sensitivity of the photo sensor, a magnetic sensor named AS5600 to get the angle of the drum, and the LCD.
+フォトセンサーの感度を切り替える回路と、ドラムの角度を取得するためのAS5600という磁気センサーと、I2CのLCDを接続できるようにしました。Add a circuit to switch the sensitivity of the photo sensor, a magnetic sensor named AS5600 to get the angle of the drum, and the LCD.
+![image2](image/P0002221.JPG)
 * [demo](image/20240212_AutoFeederTest-ezgif.com-video-to-gif-converter.gif)
 * [schematics](schematics/AutoFeeder_Drum-type_new/20240107_Rev02/AutoFeeder_Drum-type.pdf) 
 * block chart
