@@ -180,6 +180,8 @@ char DisplayData[8]="12345678";
 
 bool is_I2C_Connected(uint8_t slave_address){
     bool exist_i2c = false;  // true: exist i2c, false: No i2c
+    INTERRUPT_PeripheralInterruptDisable();
+    INTCONbits.IOCIE = 0;
     __delay_ms(10);
     if ( (RC0_GetValue() | RC1_GetValue()) != 0){ // if no pull-up
         if( I2C_Open(slave_address) == I2C_NOERR){ 
@@ -194,11 +196,17 @@ bool is_I2C_Connected(uint8_t slave_address){
             }
         }
     }
+    INTERRUPT_PeripheralInterruptEnable();
+    INTCONbits.IOCIE = 1;
     return exist_i2c;
 }
 void writeLCDCommand(char t_command){
+    INTERRUPT_PeripheralInterruptDisable();
+    INTCONbits.IOCIE = 0;
     I2C_Write1ByteRegister(LCD_ADDR, 0x00, t_command );
     __delay_us(30);     //Instruction Execution Time 14.3-26.3us
+    INTERRUPT_PeripheralInterruptEnable();
+    INTCONbits.IOCIE = 1;
 }
 void LCD_Init(){
     __delay_ms(400);
@@ -218,6 +226,8 @@ void LCD_xy(uint8_t x, uint8_t y){
     writeLCDCommand(0x80 + 0x40 * y + x);
 }
 void LCD_str2(const char *c) {
+    INTERRUPT_PeripheralInterruptDisable();
+    INTCONbits.IOCIE = 0;
     unsigned char wk;
     for (int i=0;i<8;i++){
         wk = c[i];
@@ -225,20 +235,30 @@ void LCD_str2(const char *c) {
         I2C_Write1ByteRegister(LCD_ADDR, 0x40, wk );
     }
     __delay_us(30);
+    INTERRUPT_PeripheralInterruptEnable();
+    INTCONbits.IOCIE = 1;
 }
 void LCD_clear(){
     writeLCDCommand(0x01);
     __delay_us(1100);        //Instruction Execution Time 0.59-1.08ms (550:NG, 600:GOOD)
 }
 void writeLCDData(char t_data){
+    INTERRUPT_PeripheralInterruptDisable();
+    INTCONbits.IOCIE = 0;
     I2C_Write1ByteRegister(LCD_ADDR, 0x40, t_data );
     __delay_us(30);     //Instruction Execution Time 14.3-26.3us
+    INTERRUPT_PeripheralInterruptEnable();
+    INTCONbits.IOCIE = 1;
 }
 void LCD_SetCG(const char *c){
+    //INTERRUPT_PeripheralInterruptDisable();
+    INTCONbits.IOCIE = 0;
     for (int i=0;i<40;i++){
         writeLCDCommand(0x48+(char)i);
         writeLCDData(c[i]);
     }
+    //INTERRUPT_PeripheralInterruptEnable();
+    INTCONbits.IOCIE = 1;
 }
 
 /******** I2C AS5600 ********/
@@ -251,11 +271,15 @@ uint8_t ReadBuffer[4];
 
 int readMagData(void){
     int rb16;
+    INTERRUPT_PeripheralInterruptDisable();
+    INTCONbits.IOCIE = 0;
     I2C_ReadDataBlock(AS5600_ADDR, 0x0c, ReadBuffer, 2);
     ReadBuffer[2] = ReadBuffer[0] & 0x0f;
     rb16 = ReadBuffer[2];
     ReadBuffer[3] = ReadBuffer[1];
     rb16 = (rb16 << 8) | ReadBuffer[3];
+    INTERRUPT_PeripheralInterruptEnable();
+    INTCONbits.IOCIE = 1;
     return rb16;
 }
 /******** Motor Control ********/
@@ -310,6 +334,7 @@ bool isPushed_CW_SW(void){
         return false;
     }    
 }
+
 bool isPushed_Push_SW(void){
     if ( IO_RA2_GetValue() == 0 ){
         return true;
@@ -388,14 +413,14 @@ void RotateToTarget(int TargetAngle){
             motor_on(currentDirection, 45);
             farDistance = false;
         }
-    } while ( ((TargetAngle +2) < currentMagData) || ((TargetAngle -2) > currentMagData) );
+    } while ( ((TargetAngle +4) < currentMagData) || ((TargetAngle -4) > currentMagData) );
     motor_brake();
     //if (LCD) LCD_clear();
 }
 /******** Move one frame using the results of the optical sensor  ********/
 void detectHoleByOptical(){
     motor_on(FWD, 100);
-    __delay_ms(20);
+    __delay_ms(50);
     while( RA0_GetValue() == 1 ){   // Loop on tape section
         if( isPushed_CCW_SW() ) break;
     }
@@ -406,7 +431,37 @@ void detectHoleByOptical(){
     }
     motor_brake();
 }
-
+int CW_counter, CCW_counter;
+void CW_edge_negative(void){
+    // Disable IOCI interrupt 
+    INTCONbits.IOCIE = 0;
+    CW_counter = 0;
+    CCW_counter = 0;
+    // Enabling TMR4 interrupt.
+    PIE2bits.TMR4IE = 1;
+    TMR4_StartTimer();
+    // Enabling TMR6 interrupt.
+    PIE2bits.TMR6IE = 1;
+    TMR6_StartTimer();
+}
+void CW_count_up(void){
+    if (RC3 == 0) {
+        CW_counter++;
+        if (CW_counter > 5){
+            TMR4_StopTimer();
+        }
+    }
+}
+void CCW_count_up(void){
+    if (RC3 == 1) {
+        CCW_counter++;
+        if (CCW_counter > 5){
+            TMR6_StopTimer();
+            // Enable IOCI interrupt 
+            INTCONbits.IOCIE = 1;
+        }
+    }
+}
 /*
                          Main application
  */
@@ -427,21 +482,9 @@ void main(void)
 
     // initialize the device
     SYSTEM_Initialize();
-
-    // When using interrupts, you need to set the Global and Peripheral Interrupt Enable bits
-    // Use the following macros to:
-
-    // Enable the Global Interrupts
-    //INTERRUPT_GlobalInterruptEnable();
-
-    // Enable the Peripheral Interrupts
-    //INTERRUPT_PeripheralInterruptEnable();
-
-    // Disable the Global Interrupts
-    //INTERRUPT_GlobalInterruptDisable();
-
-    // Disable the Peripheral Interrupts
-    //INTERRUPT_PeripheralInterruptDisable();
+    IOCCF3_SetInterruptHandler(CW_edge_negative);
+    TMR4_SetInterruptHandler(CW_count_up);
+    TMR6_SetInterruptHandler(CCW_count_up);
     
     motor_off();
     LCD = is_I2C_Connected(LCD_ADDR);
@@ -450,6 +493,8 @@ void main(void)
         LCD_clear();
     }
     AS5600 = is_I2C_Connected(AS5600_ADDR);
+    //for test
+    AS5600 = false;
     
     // Resore all data from High-Endurance Flash(HEF)
     r = HEFLASH_readBlock14 (HEF_buffer14, 0, FLASH_ROWSIZE);
@@ -457,7 +502,7 @@ void main(void)
     /*
      *  Restore Tape Color
      */
-    if ( (HEF_buffer14[1] != ColorWhite ) 
+    /*if ( (HEF_buffer14[1] != ColorWhite ) 
             && (HEF_buffer14[1] != ColorClear ) 
             && (HEF_buffer14[1] != ColorBlack) )
         HEF_buffer14[1]=0;    // set default color white when no-data
@@ -466,14 +511,29 @@ void main(void)
         sprintf(DisplayData, "%s", TapeColorData[ HEF_buffer14[1] ] );
         LCD_xy(0,0); LCD_str2( DisplayData );
         __delay_ms(1000);
-        LCD_clear();
+    }*/
+    
+    // Detect current Tape Color
+    for(i=0;i<4;i++){
+        setTapeColor(i);    // 0:White, 1:Clear, 2:Black
+        if ( isExist_Hole() ) break;
     }
+    if (i < 3) {
+        if (LCD) sprintf(DisplayData, "%s", TapeColorData[i]);
+    } else {
+        i = 0;
+        if (LCD) sprintf(DisplayData, "%s", "No tape");
+    }
+    //HEF_buffer14[1] = (unsigned)i;
+    if (LCD) { LCD_xy(0,0); LCD_str2( DisplayData ); }
+    __delay_ms(1000);
 
     if (AS5600) {
         /*
          *  Restore default drum Position
          */
         if (LCD){
+            LCD_clear();
             sprintf(DisplayData, "%04d", HEF_buffer14[0]);
             LCD_xy(0,1); LCD_str2( DisplayData );
             sprintf(DisplayData, "%02x", SSP1ADD);  //Display I2C Speed for test
@@ -502,7 +562,29 @@ void main(void)
         if (LCD) LCD_clear();
         RotateToTarget((int) HEF_buffer14[0] );
     }
+    motor_brake();
+    
+    // When using interrupts, you need to set the Global and Peripheral Interrupt Enable bits
+    // Use the following macros to:
 
+    // Enable the Global Interrupts
+    INTERRUPT_GlobalInterruptEnable();
+
+    // Enable the Peripheral Interrupts
+    INTERRUPT_PeripheralInterruptEnable();
+    // Enable IOCI interrupt 
+    INTCONbits.IOCIE = 1;
+    
+    CW_counter = 0;
+    CCW_counter = 0;
+    TMR6_StopTimer();
+    TMR4_StopTimer();
+    // Disable the Global Interrupts
+    //INTERRUPT_GlobalInterruptDisable();
+
+    // Disable the Peripheral Interrupts
+    //INTERRUPT_PeripheralInterruptDisable();
+    
     while (1)
     {
         // Add your application code
@@ -510,11 +592,19 @@ void main(void)
          *  move forward one frame if CW pushed
          * Pressing CW advances one frame using the results of the optical sensor.
          */
-        if ( isPushed_CW_SW() ){
+        /*if ( isPushed_CW_SW() ){
             detectHoleByOptical();
         }
-        __delay_ms(10);
+        __delay_ms(10);*/
 
+        if (CW_counter>5){
+            detectHoleByOptical();
+            //__delay_ms(1000);
+            CW_counter = 0;
+            //CCW_counter = 0;
+            // Enable IOCI interrupt 
+            //INTCONbits.IOCIE = 1;
+        }
         /*
          *  Move backward while CCW is pressed
          */
@@ -528,6 +618,7 @@ void main(void)
          *  Memorize rotation angle and tape color to EEPROM when SW was pushed
          */
         if ( isPushed_Push_SW() ){
+            INTCONbits.IOCIE = 0;
             if (AS5600) {
                 //Save Mag Position
                 HEF_buffer14[0] = (unsigned) readMagData();
@@ -546,12 +637,13 @@ void main(void)
             HEF_buffer14[1] = (unsigned)i;
             if (LCD) { LCD_xy(0,0); LCD_str2( DisplayData ); }
             
-            RotateToTarget((int)HEF_buffer14[0]);   //return to Saved Mag Pos
+            if (AS5600) RotateToTarget((int)HEF_buffer14[0]);   //return to Saved Mag Pos
 
             // Memorizes 21 hole positions
             __delay_ms(1000);
-            if (LCD) LCD_clear();
-            if (AS5600) {    
+            
+            if (AS5600) {
+                if (LCD) LCD_clear();
                 for(i=0;i<=22;i++){
                     detectHoleByOptical();
                     HEF_buffer14[2+i] = (unsigned) readMagData() ;
@@ -570,9 +662,12 @@ void main(void)
                 if (LCD) LCD_clear();
                 RotateToTarget((int) HEF_buffer14[0] );
             }
+            INTCONbits.IOCIE = 1;
         }
         
         if (LCD && AS5600){
+            INTCONbits.IOCIE = 0;
+            INTERRUPT_PeripheralInterruptDisable();
             sprintf(DisplayData, "%04d", readMagData()); 
             LCD_xy(0,0); LCD_str2( DisplayData );
             I2C_ReadDataBlock(AS5600_ADDR, 0x0b, ReadBuffer, 1);
@@ -592,6 +687,8 @@ void main(void)
                 }
             }
             LCD_xy(7,1); LCD_str2( DisplayData );
+            INTCONbits.IOCIE = 1;
+            INTERRUPT_PeripheralInterruptEnable();
         }
     }
 }
