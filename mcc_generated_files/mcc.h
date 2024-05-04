@@ -52,15 +52,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <conio.h>
-#include "interrupt_manager.h"
 #include "i2c_master.h"
-#include "tmr6.h"
-#include "tmr4.h"
+#include "fvr.h"
+#include "pwm3.h"
 #include "cmp2.h"
 #include "tmr2.h"
 #include "pwm4.h"
-#include "fvr.h"
-#include "pwm3.h"
 
 
 
