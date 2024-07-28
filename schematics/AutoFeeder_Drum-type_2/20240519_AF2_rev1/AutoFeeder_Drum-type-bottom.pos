@@ -1,0 +1,13 @@
+### Module positions - created on  ###
+### Printed by Pcbnew version (6.0.10-0)
+## Unit = mm, Angle = deg.
+## Side : bottom
+# Ref     Val                  Package                                     PosX       PosY       Rot  Side
+J4        Conn_02x03_Odd_Even  PinHeader_2x03_P2.54mm_Vertical          -3.2000    11.7300    0.0000  bottom
+J5        Conn_01x01           PinHeader_1x01_P2.54mm_Vertical         -21.6912    64.2826  180.0000  bottom
+J6        Conn_01x01           PinHeader_1x01_P2.54mm_Vertical         -21.6912    56.6880  180.0000  bottom
+JP1       Jumper_2_Bridged     PinHeader_1x02_P2.54mm_Horizontal       -15.2620    13.0000  -90.0000  bottom
+M1        Motor_DC             JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical    -4.2130     6.0150  -90.0000  bottom
+U1        CNZ1023              CNZ1023                                 -29.3000    61.7500  180.0000  bottom
+U4        AS5600               SOP-8_3.9x4.9mm_P1.27mm                 -13.5000    35.0000  180.0000  bottom
+## End

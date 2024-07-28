@@ -72,7 +72,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="CMP2" name="validateSignal"/>
-         <value>2x</value>
+         <value>1x</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="CMP2" registerAlias="CMCON0" settingAlias="CHYS" alias="disabled"/>
@@ -256,7 +256,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="FVR" name="cdafvrVoltage"/>
-         <value>2.048 V</value>
+         <value>1.024 V</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="FVR" registerAlias="FVRCON" settingAlias="ADFVR" alias="1x"/>
@@ -324,7 +324,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.RegisterKey" moduleName="FVR" registerAlias="FVRCON"/>
-         <value>136</value>
+         <value>132</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="FVR" registerAlias="FVRCON" settingAlias="ADFVR"/>
@@ -332,7 +332,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="FVR" registerAlias="FVRCON" settingAlias="CDAFVR"/>
-         <value>2x</value>
+         <value>1x</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.SettingKey" moduleName="FVR" registerAlias="FVRCON" settingAlias="FVREN"/>
@@ -840,7 +840,7 @@
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.CustomKey" moduleName="MSSP" name="tmr2PeriodValue"/>
-         <value>0.001024</value>
+         <value>0.00002</value>
       </entry>
       <entry>
          <key class="com.microchip.mcc.core.tokenManager.OptionKey" moduleName="MSSP" registerAlias="SSPCON1" settingAlias="CKP" alias="Idle:High, Active:Low"/>
@@ -4234,7 +4234,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files/fvr.c</file>
-         <hash>265635050abaa23e134df61201fd110316988c22890a22e0f254f3e934b7ca5a</hash>
+         <hash>c25fdade1292f0d2968da4342d09edfd58c32ed9c8a1367b0779556f920d9c43</hash>
       </entry>
       <entry>
          <file>mcc_generated_files/fvr.h</file>
@@ -4250,7 +4250,7 @@
       </entry>
       <entry>
          <file>mcc_generated_files/mcc.c</file>
-         <hash>ff4c9ebdd8b1c155f2dd8173baef9241e68a21e81179f2e92a3f5f1707fa5dc5</hash>
+         <hash>1e179076ffa11b5ada4b8bd1cbebc98650b11925bf04fccb5f550ed548f0635e</hash>
       </entry>
       <entry>
          <file>mcc_generated_files/mcc.h</file>

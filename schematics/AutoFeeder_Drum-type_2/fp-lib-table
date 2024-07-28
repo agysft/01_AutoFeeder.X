@@ -1,0 +1,4 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "AutoFeeder_Drum-type_new")(type "KiCad")(uri "/Users/agy/MPLABXProjects/PIC16F1705")(options "")(descr ""))
+)

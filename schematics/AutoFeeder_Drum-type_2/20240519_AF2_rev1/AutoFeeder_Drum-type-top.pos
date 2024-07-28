@@ -1,0 +1,41 @@
+### Module positions - created on  ###
+### Printed by Pcbnew version (6.0.10-0)
+## Unit = mm, Angle = deg.
+## Side : top
+# Ref     Val                   Package                                     PosX       PosY       Rot  Side
+C1        0.01u                 C_0603_1608Metric                        14.5000    28.4940   90.0000  top
+C2        0.1u                  C_0805_2012Metric                        21.4850    30.7800  180.0000  top
+C3        10u                   C_0805_2012Metric                        11.0710     3.3480  -90.0000  top
+C4        0.1u                  C_0603_1608Metric                        17.6750    35.0980  -90.0000  top
+C5        1u                    C_0603_1608Metric                        14.7540    33.7010  -90.0000  top
+C6        0.1u                  C_0805_2012Metric                        10.0000    13.0000  180.0000  top
+D1        1SS355VM              D_SOD-323F                                9.4200    39.0350  -90.0000  top
+D2        1SS355VM              D_SOD-323F                                9.4200    18.7150   90.0000  top
+D3        LED                   LED_0603_1608Metric                       3.0475    47.9250  180.0000  top
+Fed3      Fiducial_1mm_Mask3mm  Fiducial_1mm_Mask3mm                     25.5000    67.5000    0.0000  top
+Fid1      Fiducial_1mm_Mask3mm  Fiducial_1mm_Mask3mm                      1.5000     1.5000    0.0000  top
+Fid2      Fiducial_1mm_Mask3mm  Fiducial_1mm_Mask3mm                      8.0000    65.0000    0.0000  top
+Fid4      Fiducial_1mm_Mask3mm  Fiducial_1mm_Mask3mm                     28.0000     3.0000    0.0000  top
+J1        USB_C_Receptacle_6    USB_C_6                                  26.5000     2.7745    0.0000  top
+J2        Conn_01x05            PinHeader_1x05_P2.54mm_Vertical          12.7250    16.1750   90.0000  top
+J3        Conn_02x02_Odd_Even   PinHeader_2x02_P2.54mm_Vertical           3.2000    21.2550   90.0000  top
+J7        Conn_01x04            PinHeader_1x04_P2.54mm_Vertical          14.5000    64.2826    0.0000  top
+R1        5.1k                  R_0603_1608Metric                        27.8350    10.4600    0.0000  top
+R2        5.1k                  R_0603_1608Metric                        24.0250    10.4600  180.0000  top
+R3        1k                    R_0603_1608Metric                         4.4700    30.1450  -90.0000  top
+R4        1k                    R_0603_1608Metric                        21.6150    66.9750  -90.0000  top
+R5        1.5k                  R_0603_1608Metric                        27.5000    21.9000  -90.0000  top
+R6        10k                   R_0603_1608Metric                        13.9920     9.8250    0.0000  top
+R7        1k                    R_0603_1608Metric                         7.4925    47.9250    0.0000  top
+R8        9.1k                  R_0603_1608Metric                        16.4050    25.7000  -90.0000  top
+R9        20k                   R_0603_1608Metric                        25.5000    36.0000  -90.0000  top
+R10       5.1k                  R_0603_1608Metric                        11.7375    42.4000  -90.0000  top
+R11       5.1k                  R_0603_1608Metric                        14.5000    42.4473  -90.0000  top
+RV1       20k                   Potentiometer_ACP_CA6-H2,5_Horizontal    27.5000    30.0000    0.0000  top
+RV2       20k                   Potentiometer_ACP_CA6-H2,5_Horizontal    27.5000    38.5000    0.0000  top
+SW1       TMHU26                THMU26_2                                  2.8190    39.0350  180.0000  top
+U2        PIC16F1705-I/SO       SOIC-14_3.9x8.7mm_P1.27mm                21.6150    23.7950    0.0000  top
+U3        ZXBM5210-S            SOIC-8_3.9x4.9mm_P1.27mm                 16.5350     4.7450  180.0000  top
+U5        NJL5901AR-1           NJL5901AR-1                               9.0000    60.4726   90.0000  top
+U6        L78L05_SOT89          SOT-89-3                                  9.4200     8.5550  -90.0000  top
+## End
