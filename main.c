@@ -47,6 +47,10 @@
 #include <string.h>
 #include "mcc_generated_files/examples/i2c_master_example.h"
 
+//Select sensor CNZ1023 or NJL5901AR-1
+#define CNZ1023
+//#define NJL5901
+
 /******* FLASH *******/
 #define FLASH_ROWSIZE   32      //size of a row
 #define HEFLASH_START   0x1F80  //first address in HE Flash memory
@@ -319,6 +323,20 @@ bool isPushed_Push_SW(void){
         return false;
     }    
 }
+int pressed_and_held = 0;
+bool isPushed_Push_SW_long(void){
+    if ( isPushed_Push_SW() ){
+        __delay_ms(100);
+        pressed_and_held++;
+        if ( ( pressed_and_held ) > 20) { // pressed and held 2 second
+            pressed_and_held = 0;
+            return true;
+        }
+        return false;
+    }
+    pressed_and_held = 0;
+    return false;
+}
 /******** Select Sensor sensitivity  ********/
 #define ColorWhite 0
 #define ColorClear 1
@@ -370,13 +388,13 @@ bool isExist_Hole(){
 void RotateToTarget(int TargetAngle){
     int DiffAngle, currentDirection, currentMagData;
     bool farDistance = true;
-    
-    DiffAngle = readMagData() + 4096 - TargetAngle;
+    currentMagData = readMagData();
+    DiffAngle = currentMagData + 4096 - TargetAngle;
     if (DiffAngle > 4095) DiffAngle -= 4096;
     if( 0 > ( DiffAngle - 2048 ) ) 
-        currentDirection = FWD; 
+        currentDirection = REV;//FWD; 
     else 
-        currentDirection = REV;
+        currentDirection = FWD;//REV;
     motor_on(currentDirection, 80);
     do {
         __delay_ms(10);
@@ -400,7 +418,7 @@ void detectHoleByOptical(){
     while( RA0_GetValue() == 1 ){   // Loop on tape section
         if( isPushed_CCW_SW() ) break;
     }
-    motor_on(FWD, 50);
+    motor_on(FWD, 100);
     __delay_ms(10);
     while( RA0_GetValue() == 0 ){   // Loop on hole section
         if( isPushed_CCW_SW() ) break;
@@ -476,6 +494,7 @@ void main(void)
     /*
      *  Detect current Tape Color
      */
+#ifdef NJL5901
     for(i=0;i<4;i++){
         setTapeColor(i);    // 0:White, 1:Clear, 2:Black
         if ( isExist_Hole() ) break;
@@ -486,16 +505,22 @@ void main(void)
         i = 0;
         if (LCD) sprintf(DisplayData, "%s", "No tape");
     }
-    //HEF_buffer14[1] = (unsigned)i;
+#endif
+#ifdef CNZ1023
+    i = ColorBlack;
+    setTapeColor(i);    // 0:White, 1:Clear, 2:Black
+    if (LCD) sprintf(DisplayData, "%s", "BK or WH");
+#endif
+    HEF_buffer14[1] = (unsigned)i;
     if (LCD) { LCD_xy(0,0); LCD_str2( DisplayData ); }
     __delay_ms(1000);
+    if (LCD) { LCD_clear(); }
 
     if (false) { //AS5600) {
         /*
          *  Restore default drum Position
          */
         if (LCD){
-            LCD_clear();
             sprintf(DisplayData, "%04d", HEF_buffer14[0]);
             LCD_xy(0,1); LCD_str2( DisplayData );
             sprintf(DisplayData, "%02x", SSP1ADD);  //Display I2C Speed for test
@@ -520,7 +545,7 @@ void main(void)
             LCD_xy(0,0); LCD_str2( "Rewind!" );
         }
         motor_on(REV, 100);
-        __delay_ms(11500);     //move to near by target
+        __delay_ms(12000);     //move to near by target
         if (LCD) LCD_clear();
         RotateToTarget((int) HEF_buffer14[0] );
     }
@@ -577,32 +602,14 @@ void main(void)
         /*
          *  Memorize rotation angle and tape color to EEPROM when SW was pushed
          */
-        if ( isPushed_Push_SW() ){
+        if ( isPushed_Push_SW_long() ){
             if (AS5600) {
                 //Save Mag Position
                 HEF_buffer14[0] = (unsigned) readMagData();
             }
-            // Detect current Tape Color
-            for(i=0;i<4;i++){
-                setTapeColor(i);    // 0:White, 1:Clear, 2:Black
-                if ( isExist_Hole() ) break;
-            }
-            if (i < 3) {
-                if (LCD) sprintf(DisplayData, "%s", TapeColorData[i]);
-            } else {
-                i = 0;
-                if (LCD) sprintf(DisplayData, "%s", "No tape");
-            }
-            HEF_buffer14[1] = (unsigned)i;
-            if (LCD) { LCD_xy(0,0); LCD_str2( DisplayData ); }
-            
-            if (AS5600) RotateToTarget((int)HEF_buffer14[0]);   //return to Saved Mag Pos
 
             // Memorizes 21 hole positions
-            __delay_ms(1000);
-            
             if (AS5600) {
-                if (LCD) LCD_clear();
                 for(i=0;i<=22;i++){
                     detectHoleByOptical();
                     HEF_buffer14[2+i] = (unsigned) readMagData() ;
@@ -617,8 +624,9 @@ void main(void)
                     LCD_xy(0,0); LCD_str2( "Rewind!" );
                 }
                 motor_on(REV, 100);
-                __delay_ms(11500);   //move to near by target
+                __delay_ms(12000);   //move to near by target
                 if (LCD) LCD_clear();
+                motor_brake();
                 RotateToTarget((int) HEF_buffer14[0] );
             }
         }
