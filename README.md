@@ -97,3 +97,5 @@ Autofeeder Rev.02の機能はそのままに、基板を縦置きする事で省
   Settings to prevent the HEF-block from being initialized when writing to the PIC
   ![image](image/04_HFE-block-tips.png)
 
+
+
