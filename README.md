@@ -1,5 +1,5 @@
 
-# 01_AutoFeeder.X
+# AutoFeeder
 ![image](image/overview.png)
 This is a test project for an auto-feeder for CompactPnP. When the switch is pressed, the feeder moves one frame. It includes a program and a schematic. The program was written in PIC MPLAB X IDE. The schematic is written in KiCAD and the printed circuit board is made. The structure was made with a 3D printer.
 
@@ -70,6 +70,13 @@ graph LR
 * HEF 0x1FA0-0x1FFF is not use.
 
 ---
+### AutoFeeder2 Rev.1
+Autofeeder Rev.02の機能はそのままに、基板を縦置きする事で省スペース化を図りました。また、透過型のフォトインタラプターCNZ1023を使えるようにしました。The functions of the Autofeeder are retained, but the board is placed vertically to save space. Transmissive photo interrupter CNZ1023 can also be used.
+![AF2R1_pict1](image/Autofeeder2_r1_1.JPG)
+![AF2R1_pict1](image/Autofeeder2_r1_2.JPG)
+* [demo](image/20240803_AutoFeeder_Test2.gif)
+* [schematics](schematics/AutoFeeder_Drum-type_2/20240519_AF2_rev1/AutoFeeder_Drum-type.pdf) 
+
 ---
 ### Tips
 

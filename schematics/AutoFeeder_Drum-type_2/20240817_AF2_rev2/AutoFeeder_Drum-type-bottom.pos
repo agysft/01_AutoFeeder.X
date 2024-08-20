@@ -1,0 +1,14 @@
+### Footprint positions - created on 2024-08-18T22:06:51+0900 ###
+### Printed by KiCad version 8.0.3
+## Unit = mm, Angle = deg.
+## Side : bottom
+# Ref     Val                  Package                                     PosX       PosY       Rot  Side
+C7        220uF                CP_Radial_D8.0mm_P3.50mm                 15.4500    10.4600   90.0000  bottom
+J4        Conn_02x03_Odd_Even  PinHeader_2x03_P2.54mm_Vertical           3.2000    10.4600    0.0000  bottom
+J5        Conn_01x01           PinHeader_1x01_P2.54mm_Vertical          22.1912    13.3826  180.0000  bottom
+J6        Conn_01x01           PinHeader_1x01_P2.54mm_Vertical          22.1912     5.7880  180.0000  bottom
+JP1       Jumper_2_Bridged     PinHeader_1x02_P2.54mm_Horizontal        10.3700    21.8900  180.0000  bottom
+M1        Motor_DC             JST_XH_B2B-XH-A_1x02_P2.50mm_Vertical     5.9050     4.1100  180.0000  bottom
+U1        CNZ1023              CNZ1023                                  29.8000    10.6000  180.0000  bottom
+U4        AS5600               SOP-8_3.9x4.9mm_P1.27mm                  13.5000    35.0000  180.0000  bottom
+## End

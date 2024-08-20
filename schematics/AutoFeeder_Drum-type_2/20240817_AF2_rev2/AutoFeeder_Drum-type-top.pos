@@ -1,0 +1,38 @@
+### Footprint positions - created on 2024-08-18T22:06:51+0900 ###
+### Printed by KiCad version 8.0.3
+## Unit = mm, Angle = deg.
+## Side : top
+# Ref     Val                   Package                               PosX       PosY       Rot  Side
+C1        0.01u                 C_0603_1608Metric                  19.1200    16.8100  180.0000  top
+C2        0.1u                  C_0805_2012Metric                  21.8000    33.9550  180.0000  top
+C3        0.1uF                 C_0805_2012Metric                  11.6400     6.6500  -90.0000  top
+C4        0.1u                  C_0805_2012Metric                  17.8630    34.9710  -90.0000  top
+C5        1u                    C_0805_2012Metric                  14.6880    32.9390  -90.0000  top
+C6        0.1u                  C_0805_2012Metric                  11.0050    16.1750  180.0000  top
+C8        0.1uF                 C_0805_2012Metric                   9.7350     2.8400  -90.0000  top
+D1        1SS355VM              D_SOD-323F                         12.2750    39.6700  -90.0000  top
+D2        1SS355VM              D_SOD-323F                          4.7820    20.6200    0.0000  top
+D3        LED                   LED_0603_1608Metric                21.8000    47.2900   90.0000  top
+Fed2      Fiducial_1mm_Mask3mm  Fiducial_1mm_Mask3mm                5.5000    48.0000    0.0000  top
+Fed3      Fiducial_1mm_Mask3mm  Fiducial_1mm_Mask3mm               30.0000    48.5000    0.0000  top
+Fid4      Fiducial_1mm_Mask3mm  Fiducial_1mm_Mask3mm               24.5000     2.0000    0.0000  top
+Fid5      Fiducial_Silk         Fiducial_Silk                       4.0000     1.0000    0.0000  top
+Fid6      Fiducial_Silk         Fiducial_Silk                       4.5000    46.0000    0.0000  top
+Fid7      Fiducial_Silk         Fiducial_Silk                      31.0000    46.5000    0.0000  top
+Fid8      Fiducial_Silk         Fiducial_Silk                      31.0000     1.0000    0.0000  top
+J2        Conn_01x05            PinHeader_1x05_P2.54mm_Vertical    13.5450    19.9850   90.0000  top
+J3        Conn_02x02_Odd_Even   PinHeader_2x02_P2.54mm_Vertical     3.2000    25.0650   90.0000  top
+R3        1k                    R_0603_1608Metric                   6.5600    31.0000  -90.0000  top
+R4        510                   R_0603_1608Metric                  22.1810    16.1750  -90.0000  top
+R5        1k                    R_0603_1608Metric                  28.1500    21.2550  -90.0000  top
+R6        10k                   R_0603_1608Metric                  16.0850    28.8750   90.0000  top
+R7        1k                    R_0603_1608Metric                  21.8000    43.4800  -90.0000  top
+R8        9.1k                  R_0603_1608Metric                  28.1500    25.0650  -90.0000  top
+R9        20k                   R_0603_1608Metric                  28.1500    28.8750  -90.0000  top
+R10       5.1k                  R_0603_1608Metric                  14.8150    42.4000  -90.0000  top
+R11       5.1k                  R_0603_1608Metric                  17.9900    40.9400  -90.0000  top
+SW1       TMHU26                THMU26_2                            6.0000    39.0350  180.0000  top
+U2        AM2837                SOIC-8_3.9x4.9mm_P1.27mm           16.7200     4.7450  -90.0000  top
+U6        L78L05_SOT89          SOT-89-3                           10.3700    12.3650  -90.0000  top
+U7        PIC16F1705-I/SO       SOIC-14_3.9x8.7mm_P1.27mm          22.4350    26.9700    0.0000  top
+## End
